@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ES6",
+    "module": "CommonJS",
     "strict": true,
     "noImplicitReturns": true,
     "removeComments": true,
@@ -13,13 +13,14 @@
     "lib": ["es2017", "dom"],
     "outDir": "dist",
     "rootDir": "./",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "*": ["types/*"]
     }
   },
   "include": [
-    "src/**/*"
+    "./src/**/*.ts",
+    "./src/**/*.d.ts"
   ],
   "exclude": [
     "node_modules/*"
