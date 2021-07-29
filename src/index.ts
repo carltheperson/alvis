@@ -1,1 +1,3 @@
-console.log("Hello world");
+import Two from "twojs-ts";
+
+const two = new Two();

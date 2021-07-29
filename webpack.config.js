@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const publicPath = path.resolve(__dirname, "public");
 const srcPath = path.resolve(__dirname, "src");
@@ -38,6 +39,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(publicPath, "index.html"),
       filename: "index.html",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: "./public/favicon.ico" }],
     }),
   ],
 };
