@@ -1,3 +1,4 @@
-import Two from "twojs-ts";
+import { Array2D } from "./2d-array";
 
-const two = new Two();
+const thing = new Array2D();
+thing.drawArray();
