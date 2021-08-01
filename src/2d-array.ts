@@ -2,7 +2,7 @@ import * as Two from "twojs-ts";
 import { Alvis } from "./alvis";
 
 enum Duration {
-  SWAP = 3000,
+  SWAP = 500,
 }
 
 interface Rectangle extends Two.Rectangl {
@@ -24,7 +24,8 @@ class Cell {
   ) {
     this.two = two;
     const rec = two.makeRectangle(x, y, width, height);
-    const text_ = new Two.Text(text, x, y, {});
+    rec.linewidth = 2;
+    const text_ = new Two.Text(text, x, y, { size: 18, weight: 800 });
     two.scene.add(text_);
     this.rectangle = Object.assign(rec, { index: 0, text: text_ });
   }
@@ -102,15 +103,20 @@ class Event {
 export class Array2D extends Alvis {
   private cells: Cell[] = [];
   private events: Event[] = [];
+  private originalArray: string[] | number[] = [];
   private xOffset = 0;
   private yOffset = 0;
   private cellWidth = 0;
 
-  constructor(element: HTMLElement, values: string[], cellWidth = 50) {
+  constructor(
+    element: HTMLElement,
+    values: string[] | number[],
+    cellWidth = 50
+  ) {
     super(element);
 
     this.cellWidth = cellWidth;
-
+    this.originalArray = values;
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
 
@@ -147,7 +153,7 @@ export class Array2D extends Alvis {
     });
   }
 
-  private generateCells(values: string[]): Cell[] {
+  private generateCells(values: string[] | number[]): Cell[] {
     return new Array(values.length).fill(0).map((_, i) => {
       return new Cell(
         this.two,
@@ -155,7 +161,7 @@ export class Array2D extends Alvis {
         this.yOffset,
         this.cellWidth,
         this.cellWidth,
-        values[i]
+        values[i].toString()
       );
     });
   }
@@ -170,16 +176,58 @@ export class Array2D extends Alvis {
     );
   }
 
-  changeColor(i: number, color: string): void {
+  changeColor(i: number, color: string, duration = 0): void {
     this.events.push(
-      new Event((_, next) => {
+      new Event((ms, next) => {
         this.cells[i].color = color;
-        next();
+        if (ms > duration) {
+          next();
+        }
+      })
+    );
+  }
+
+  changeColors(indexes: number[], color: string, duration = 0) {
+    this.events.push(
+      new Event((ms, next) => {
+        indexes.forEach((i) => (this.cells[i].color = color));
+        if (ms > duration) {
+          next();
+        }
+      })
+    );
+  }
+
+  changeColorsInRange(
+    startI: number,
+    endI: number,
+    color: string,
+    duration = 0
+  ) {
+    const indexes = new Array(this.originalArray.length)
+      .fill(0)
+      .map((_, i) => i)
+      .filter((i) => i >= startI && i <= endI);
+    this.changeColors(indexes, color, duration);
+  }
+
+  changeAllColors(color: string, duration = 0) {
+    this.events.push(
+      new Event((ms, next) => {
+        this.cells.forEach((cell) => (cell.color = color));
+        if (ms > duration) {
+          next();
+        }
       })
     );
   }
 
   swapElements(i1: number, i2: number): void {
+    // Actual swap
+    const temp = this.originalArray[i1];
+    this.originalArray[i1] = this.originalArray[i2];
+    this.originalArray[i2] = temp;
+
     this.cells[i1].displayOnTop();
     this.cells[i2].displayOnTop();
     let lastMs = 0;
