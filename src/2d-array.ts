@@ -83,46 +83,52 @@ class Cell {
   }
 }
 
-type ListenerCallBack = (ms: number, remove: () => void) => void;
+type EventCallBack = (ms: number, next: () => void) => void;
 
-class Listener {
+class Event {
   removeNextCall = false;
-  initialMs = new Date().getTime();
-  callback: ListenerCallBack = () => {};
+  initialMs = 0;
+  callback: EventCallBack = () => {};
 
-  constructor(callback: ListenerCallBack) {
+  constructor(callback: EventCallBack) {
     this.callback = callback;
   }
 
-  remove(): void {
+  next(): void {
     this.removeNextCall = true;
   }
 }
 
 export class Array2D extends Alvis {
   private cells: Cell[] = [];
-  private listeners: Listener[] = [];
+  private events: Event[] = [];
   private xOffset = 0;
   private yOffset = 0;
-  private cellWidth = 70;
+  private cellWidth = 0;
 
-  constructor(element: HTMLElement, values: string[]) {
+  constructor(element: HTMLElement, values: string[], cellWidth = 50) {
     super(element);
+
+    this.cellWidth = cellWidth;
 
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
 
     super.bindUpdateCallback(() => {
-      this.listeners =
-        this.listeners.filter((listener) => !listener.removeNextCall) ?? [];
+      this.events =
+        this.events.filter((listener) => !listener.removeNextCall) ?? [];
 
       const currentTimeMs = new Date().getTime();
-      this.listeners.forEach((listener) => {
-        listener.callback(
-          currentTimeMs - listener.initialMs,
-          listener.remove.bind(listener)
+      if (this.events[0]) {
+        if (this.events[0].initialMs === 0) {
+          this.events[0].initialMs = currentTimeMs;
+        }
+
+        this.events[0].callback(
+          currentTimeMs - this.events[0].initialMs,
+          this.events[0].next.bind(this.events[0])
         );
-      });
+      }
     });
 
     super.bindResizeCallback((width, height) => {
@@ -147,15 +153,30 @@ export class Array2D extends Alvis {
         this.two,
         this.xOffset + i * this.cellWidth,
         this.yOffset,
-        70,
-        70,
+        this.cellWidth,
+        this.cellWidth,
         values[i]
       );
     });
   }
 
+  wait(ms: number) {
+    this.events.push(
+      new Event((_, next) => {
+        setTimeout(() => {
+          next();
+        }, ms);
+      })
+    );
+  }
+
   changeColor(i: number, color: string): void {
-    this.cells[i].color = color;
+    this.events.push(
+      new Event((_, next) => {
+        this.cells[i].color = color;
+        next();
+      })
+    );
   }
 
   swapElements(i1: number, i2: number): void {
@@ -169,8 +190,8 @@ export class Array2D extends Alvis {
     const secondX = second.x;
     const lengthBetween = Math.abs(first.x - second.x);
 
-    this.listeners.push(
-      new Listener((ms, remove) => {
+    this.events.push(
+      new Event((ms, next) => {
         const first = this.cells[i1];
         const second = this.cells[i2];
         const lengthPrMs = lengthBetween / Duration.SWAP;
@@ -187,7 +208,7 @@ export class Array2D extends Alvis {
           const temp = this.cells[i1];
           this.cells[i1] = this.cells[i2];
           this.cells[i2] = temp;
-          remove();
+          next();
         }
 
         lastMs = ms;
