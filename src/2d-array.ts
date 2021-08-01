@@ -12,6 +12,7 @@ interface Rectangle extends Two.Rectangl {
 
 class Cell {
   private rectangle: Rectangle | null = null;
+  private two: Two | null = null;
 
   constructor(
     two: Two,
@@ -21,6 +22,7 @@ class Cell {
     height: number,
     text: string
   ) {
+    this.two = two;
     const rec = two.makeRectangle(x, y, width, height);
     const text_ = new Two.Text(text, x, y, {});
     two.scene.add(text_);
@@ -53,9 +55,24 @@ class Cell {
     } else return -1;
   }
 
-  set style({ color, strokeWidth }: { color: string; strokeWidth: string }) {}
+  set color(color: string) {
+    if (this.rectangle && color) this.rectangle.fill = color;
+  }
 
-  displayOnTop() {}
+  set strokeWidth(strokeWidth: number) {
+    if (this.rectangle && strokeWidth) this.rectangle.linewidth = strokeWidth;
+  }
+
+  displayOnTop() {
+    const recClone = this.rectangle?.clone();
+    const textClone = this.rectangle?.text?.clone();
+    this.rectangle?.remove();
+    this.two?.scene.remove(this.rectangle?.text);
+    this.rectangle = Object.assign(recClone, {
+      index: this.rectangle?.index,
+      text: textClone,
+    });
+  }
 }
 
 type ListenerCallBack = (ms: number, remove: () => void) => void;
@@ -78,9 +95,9 @@ export class Array2D extends Alvis {
   private cells: Cell[] = [];
   private listeners: Listener[] = [];
 
-  constructor() {
+  constructor(values: string[]) {
     super();
-    this.cells = this.generateCells(5);
+    this.cells = this.generateCells(values);
     super.bindUpdateCallback(() => {
       this.listeners =
         this.listeners.filter((listener) => !listener.removeNextCall) ?? [];
@@ -95,24 +112,25 @@ export class Array2D extends Alvis {
     });
   }
 
-  private generateCells(n: number): Cell[] {
-    return new Array(n).fill(0).map((_, i) => {
+  private generateCells(values: string[]): Cell[] {
+    return new Array(values.length).fill(0).map((_, i) => {
       return new Cell(
         this.two,
-        this.two.width / 2 + i * 50,
+        this.two.width / 2 + i * 70,
         this.two.height / 2,
-        50,
-        50,
-        i.toString()
+        70,
+        70,
+        values[i]
       );
     });
   }
 
   changeColor(i: number, color: string): void {
-    // this.cells[i].fill = color;
+    this.cells[i].color = color;
   }
 
   swapElements(i1: number, i2: number): void {
+    this.cells[i1].displayOnTop();
     let lastMs = 0;
     const first = this.cells[i1];
     const second = this.cells[i2];
@@ -132,6 +150,9 @@ export class Array2D extends Alvis {
         if (ms > Duration.SWAP) {
           first.x = secondX;
           second.x = firstX;
+          const temp = this.cells[i1];
+          this.cells[i1] = this.cells[i2];
+          this.cells[i2] = temp;
           remove();
         }
 
