@@ -16,6 +16,7 @@
       "error",
       "expression",
       { "allowArrowFunctions": true }
-    ]
+    ],
+    "no-empty": [true, "allow-empty-functions", "allow-empty-catch"]
   }
 }

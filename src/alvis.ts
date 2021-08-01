@@ -1,4 +1,4 @@
-import Two, { Events } from "twojs-ts";
+import * as Two from "twojs-ts";
 
 export class Alvis {
   protected two = new Two({
@@ -7,7 +7,7 @@ export class Alvis {
   }).appendTo(document.body);
 
   protected bindUpdateCallback(callback: (frameCount: number) => void): void {
-    this.two.bind(Events.update, (arg) => {
+    this.two.bind(Two.Events.update, (arg) => {
       if (arg === undefined) {
         callback(0);
       }

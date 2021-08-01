@@ -38,6 +38,7 @@
   "dependencies": {
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
+    "two.js": "^0.7.8",
     "twojs-ts": "^0.7.0-13"
   }
 }
