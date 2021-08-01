@@ -7,5 +7,9 @@ setTimeout(() => {
 }, 1000);
 
 setTimeout(() => {
+  thing.changeColor(4, "pink");
+}, 2000);
+
+setTimeout(() => {
   thing.swapElements(2, 4);
 }, 3000);
