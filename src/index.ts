@@ -1,34 +1,37 @@
 import { Array1D } from "./array/array1d";
+import { Chart } from "./chart/chart";
 
-const array = [9, 5, 2, 1, 10];
+const array = [11, 4, 9, 5, 2, 1, 10];
 
-const alvis = new Array1D(document.body, array, {
-  cellWidth: 50,
-  textSize: 10,
-});
+// const alvis = new Array1D(document.body, array, {
+//   cellWidth: 50,
+//   textSize: 10,
+// });
 
-(async () => {
-  let swapAmount = 0;
-  let end = array.length - 1;
+new Chart(document.body, array, {});
 
-  do {
-    swapAmount = 0;
+// (async () => {
+//   let swapAmount = 0;
+//   let end = array.length - 1;
 
-    for (let i = 0; i <= end; i++) {
-      await alvis.changeColor(i, "lightgrey", 200);
-      if (array[i] > array[i + 1]) {
-        await alvis.swapElements(i, i + 1, 500);
-        alvis.changeColor(i, "lightgrey");
-        swapAmount += 1;
-      }
-    }
+//   do {
+//     swapAmount = 0;
 
-    end -= 1;
+//     for (let i = 0; i <= end; i++) {
+//       await alvis.changeColor(i, "lightgrey", 200);
+//       if (array[i] > array[i + 1]) {
+//         await alvis.swapElements(i, i + 1, 500);
+//         alvis.changeColor(i, "lightgrey");
+//         swapAmount += 1;
+//       }
+//     }
 
-    alvis.changeColorsInRange(end, array.length - 1, "lightgreen");
-    alvis.changeColorsInRange(0, end, "white");
+//     end -= 1;
 
-    await alvis.wait(50);
-  } while (swapAmount !== 0);
-  alvis.changeAllColors("lightgreen");
-})();
+//     alvis.changeColorsInRange(end, array.length - 1, "lightgreen");
+//     alvis.changeColorsInRange(0, end, "white");
+
+//     await alvis.wait(50);
+//   } while (swapAmount !== 0);
+//   alvis.changeAllColors("lightgreen");
+// })();

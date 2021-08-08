@@ -6,27 +6,32 @@ enum Default {
   CELL_WIDTH = 100,
 }
 
-interface Style extends CellStyle {
-  cellWidth?: number;
+interface Style_ {
+  cellWidth: number;
 }
+type Style = Partial<Style_>;
+
+type AllStyles = Style & CellStyle;
+type AllStylesRequired = Required<Style> & CellStyle;
 
 export class Array1D extends Alvis {
   private cells: Cell[] = [];
   private actualArray: string[] | number[] = [];
-  private style: Style = {};
+  private style: AllStylesRequired;
   private xOffset = 0;
   private yOffset = 0;
-  private cellWidth = 0;
 
-  constructor(element: HTMLElement, values: string[] | number[], style: Style) {
+  constructor(
+    element: HTMLElement,
+    values: string[] | number[],
+    style: AllStyles = {}
+  ) {
     super(element);
-
-    this.style = style;
-    const newStyle = {
+    this.style = {
+      ...style,
       cellWidth: style.cellWidth ?? Default.CELL_WIDTH,
     };
 
-    this.cellWidth = newStyle.cellWidth;
     this.actualArray = values;
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
@@ -39,8 +44,12 @@ export class Array1D extends Alvis {
   private updateOffsets(cellAmount: number) {
     const lastXOffset = this.xOffset;
     const lastYOffset = this.yOffset;
-    this.xOffset = calculateXOffset(cellAmount, this.cellWidth, this.two.width);
-    this.yOffset = calculateYOffset(this.cellWidth, this.two.height);
+    this.xOffset = calculateXOffset(
+      cellAmount,
+      this.style.cellWidth,
+      this.two.width
+    );
+    this.yOffset = calculateYOffset(this.style.cellWidth, this.two.height);
     this.cells.forEach((cell) => {
       cell.x += this.xOffset - lastXOffset;
       cell.y += this.yOffset - lastYOffset;
@@ -51,11 +60,11 @@ export class Array1D extends Alvis {
     return new Array(values.length).fill(0).map((_, i) => {
       return new Cell(
         this.two,
-        this.xOffset + i * this.cellWidth,
+        this.xOffset + i * this.style.cellWidth,
         this.yOffset,
-        this.cellWidth,
+        this.style.cellWidth,
         values[i].toString(),
-        this.style
+        this.style ?? {}
       );
     });
   }
