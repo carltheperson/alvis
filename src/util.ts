@@ -28,8 +28,8 @@ export const calculateXOffset = (
 };
 
 export const calculateYOffset = (
-  entityWidth: number,
+  entityHeight: number,
   height: number
 ): number => {
-  return height / 2 - entityWidth / 2;
+  return height / 2 - entityHeight / 2;
 };

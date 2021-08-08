@@ -4,7 +4,7 @@ import { Bar } from "./bar";
 
 enum Default {
   BAR_WIDTH = 50,
-  BAR_MAX_HEIGHT = 300,
+  BAR_MAX_HEIGHT = 500,
   BAR_MIN_HEIGHT = 50,
 }
 
@@ -66,7 +66,7 @@ export class Chart extends Alvis {
       this.style.barWidth,
       this.two.width
     );
-    this.yOffset = calculateYOffset(this.style.barWidth, this.two.height);
+    this.yOffset = calculateYOffset(this.style.barMaxHeight, this.two.height);
     this.bars.forEach((bar) => {
       bar.x += this.xOffset - lastXOffset;
       bar.y += this.yOffset - lastYOffset;
@@ -78,6 +78,10 @@ export class Chart extends Alvis {
     const max = Math.max(...values);
     const normalizedMax = max - min;
     const normalizedValue = values[index] - min;
-    return (normalizedMax / normalizedValue) * normalizedMax;
+    return (
+      (normalizedValue / normalizedMax) *
+        (this.style.barMaxHeight - this.style.barMinHeight) +
+      this.style.barMinHeight
+    );
   }
 }

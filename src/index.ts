@@ -1,7 +1,7 @@
 import { Array1D } from "./array/array1d";
 import { Chart } from "./chart/chart";
 
-const array = [11, 4, 9, 5, 2, 1, 10];
+const array = [4, 11, 9, 5, 2, 1, 10];
 
 // const alvis = new Array1D(document.body, array, {
 //   cellWidth: 50,
