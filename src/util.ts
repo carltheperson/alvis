@@ -18,3 +18,18 @@ export const combine = <T, D>(first: T, second: D): T & D => {
   });
   return comb;
 };
+
+export const calculateXOffset = (
+  entityAmount: number,
+  entityWidth: number,
+  width: number
+): number => {
+  return width / 2 - ((entityAmount - 1) * entityWidth) / 2;
+};
+
+export const calculateYOffset = (
+  entityWidth: number,
+  height: number
+): number => {
+  return height / 2 - entityWidth / 2;
+};

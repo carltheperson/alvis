@@ -1,4 +1,5 @@
 import { Alvis } from "../alvis";
+import { calculateXOffset, calculateYOffset } from "../util";
 import { Cell, CellStyle } from "./cell";
 
 enum Default {
@@ -11,7 +12,7 @@ interface Style extends CellStyle {
 
 export class Array1D extends Alvis {
   private cells: Cell[] = [];
-  private originalArray: string[] | number[] = [];
+  private actualArray: string[] | number[] = [];
   private style: Style = {};
   private xOffset = 0;
   private yOffset = 0;
@@ -26,7 +27,7 @@ export class Array1D extends Alvis {
     };
 
     this.cellWidth = newStyle.cellWidth;
-    this.originalArray = values;
+    this.actualArray = values;
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
 
@@ -38,8 +39,8 @@ export class Array1D extends Alvis {
   private updateOffsets(cellAmount: number) {
     const lastXOffset = this.xOffset;
     const lastYOffset = this.yOffset;
-    this.xOffset = this.two.width / 2 - ((cellAmount - 1) * this.cellWidth) / 2;
-    this.yOffset = this.two.height / 2 - this.cellWidth / 2;
+    this.xOffset = calculateXOffset(cellAmount, this.cellWidth, this.two.width);
+    this.yOffset = calculateYOffset(this.cellWidth, this.two.height);
     this.cells.forEach((cell) => {
       cell.x += this.xOffset - lastXOffset;
       cell.y += this.yOffset - lastYOffset;
@@ -52,7 +53,6 @@ export class Array1D extends Alvis {
         this.two,
         this.xOffset + i * this.cellWidth,
         this.yOffset,
-        this.cellWidth,
         this.cellWidth,
         values[i].toString(),
         this.style
@@ -92,7 +92,7 @@ export class Array1D extends Alvis {
     color: string,
     duration = 0
   ): void {
-    const indexes = new Array(this.originalArray.length)
+    const indexes = new Array(this.actualArray.length)
       .fill(0)
       .map((_, i) => i)
       .filter((i) => i >= startI && i <= endI);
@@ -110,9 +110,9 @@ export class Array1D extends Alvis {
 
   swapElements(i1: number, i2: number, duration = 0): Promise<void> {
     // Actual swap
-    const temp = this.originalArray[i1];
-    this.originalArray[i1] = this.originalArray[i2];
-    this.originalArray[i2] = temp;
+    const temp = this.actualArray[i1];
+    this.actualArray[i1] = this.actualArray[i2];
+    this.actualArray[i2] = temp;
 
     this.cells[i1].displayOnTop();
     this.cells[i2].displayOnTop();

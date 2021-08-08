@@ -1,7 +1,6 @@
 import * as Two from "twojs-ts";
 
 interface Rectangle extends Two.Rectangl {
-  index: number;
   text: Two.Text;
 }
 
@@ -24,7 +23,6 @@ export class Cell {
     x: number,
     y: number,
     width: number,
-    height: number,
     text: string,
     style: CellStyle
   ) {
@@ -34,14 +32,14 @@ export class Cell {
     };
 
     this.two = two;
-    const rec = two.makeRectangle(x, y, width, height);
+    const rec = two.makeRectangle(x, y, width, width);
     rec.linewidth = 2;
     const text_ = new Two.Text(text, x, y, {
       size: newStyle.textSize,
       weight: newStyle.textWeight,
     });
     two.scene.add(text_);
-    this.rectangle = Object.assign(rec, { index: 0, text: text_ });
+    this.rectangle = Object.assign(rec, { text: text_ });
   }
 
   set y(y: number) {
@@ -50,11 +48,13 @@ export class Cell {
       this.rectangle.text.translation.y = y;
     }
   }
+
   get y(): number {
     if (this.rectangle) {
       return this.rectangle.translation.y;
     } else return -1;
   }
+
   set x(x: number) {
     if (this.rectangle) {
       this.rectangle.translation.x = x;
@@ -66,10 +66,6 @@ export class Cell {
     if (this.rectangle) {
       return this.rectangle.translation.x;
     } else return -1;
-  }
-
-  set width(n: number) {
-    if (this.rectangle) this.rectangle;
   }
 
   set color(color: string) {
@@ -85,7 +81,6 @@ export class Cell {
     const textClone = this.rectangle?.text?.clone();
     this.removeGraphicalElement();
     this.rectangle = Object.assign(recClone, {
-      index: this.rectangle?.index,
       text: textClone,
     });
   }
