@@ -1,6 +1,5 @@
 import { Alvis } from "../alvis";
 import { Cell, CellStyle } from "./cell";
-import { Event, EventCallBack } from "./event";
 
 enum Default {
   CELL_WIDTH = 100,
@@ -12,7 +11,6 @@ interface Style extends CellStyle {
 
 export class Array1D extends Alvis {
   private cells: Cell[] = [];
-  private events: Event[] = [];
   private originalArray: string[] | number[] = [];
   private style: Style = {};
   private xOffset = 0;
@@ -32,27 +30,8 @@ export class Array1D extends Alvis {
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
 
-    super.bindUpdateCallback(() => {
-      this.events =
-        this.events.filter((listener) => !listener.removeNextCall) ?? [];
-
-      const currentTimeMs = new Date().getTime();
-      this.events.forEach((event) => {
-        event.callback(
-          currentTimeMs - event.creationTime,
-          event.next.bind(event)
-        );
-      });
-    });
-
     super.bindResizeCallback(() => {
       this.updateOffsets(this.cells.length);
-    });
-  }
-
-  private getEventPromise(callback: EventCallBack) {
-    return new Promise<void>((resolve) => {
-      this.events.push(new Event(callback, () => resolve()));
     });
   }
 
@@ -90,7 +69,7 @@ export class Array1D extends Alvis {
   }
 
   changeColor(i: number, color: string, duration = 0): Promise<void> {
-    return this.getEventPromise((ms, next) => {
+    return super.getEventPromise((ms, next) => {
       this.cells[i].color = color;
       if (ms > duration) {
         next();
@@ -99,7 +78,7 @@ export class Array1D extends Alvis {
   }
 
   changeColors(indexes: number[], color: string, duration = 0): Promise<void> {
-    return this.getEventPromise((ms, next) => {
+    return super.getEventPromise((ms, next) => {
       indexes.forEach((i) => (this.cells[i].color = color));
       if (ms > duration) {
         next();
@@ -121,7 +100,7 @@ export class Array1D extends Alvis {
   }
 
   changeAllColors(color: string, duration = 0): Promise<void> {
-    return this.getEventPromise((ms, next) => {
+    return super.getEventPromise((ms, next) => {
       this.cells.forEach((cell) => (cell.color = color));
       if (ms > duration) {
         next();
@@ -145,7 +124,7 @@ export class Array1D extends Alvis {
     const secondX = second.x;
     const lengthBetween = Math.abs(first.x - second.x);
 
-    return this.getEventPromise((ms, next) => {
+    return super.getEventPromise((ms, next) => {
       const first = this.cells[i1];
       const second = this.cells[i2];
       const lengthPrMs = lengthBetween / duration;
