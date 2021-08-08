@@ -1,23 +1,33 @@
 import { Alvis } from "../alvis";
-import { Cell } from "./cell";
+import { Cell, CellStyle } from "./cell";
 import { Event, EventCallBack } from "./event";
+
+enum Default {
+  CELL_WIDTH = 100,
+}
+
+interface Style extends CellStyle {
+  cellWidth?: number;
+}
 
 export class Array1D extends Alvis {
   private cells: Cell[] = [];
   private events: Event[] = [];
   private originalArray: string[] | number[] = [];
+  private style: Style = {};
   private xOffset = 0;
   private yOffset = 0;
   private cellWidth = 0;
 
-  constructor(
-    element: HTMLElement,
-    values: string[] | number[],
-    cellWidth = 50
-  ) {
+  constructor(element: HTMLElement, values: string[] | number[], style: Style) {
     super(element);
 
-    this.cellWidth = cellWidth;
+    this.style = style;
+    const newStyle = {
+      cellWidth: style.cellWidth ?? Default.CELL_WIDTH,
+    };
+
+    this.cellWidth = newStyle.cellWidth;
     this.originalArray = values;
     this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
@@ -65,7 +75,8 @@ export class Array1D extends Alvis {
         this.yOffset,
         this.cellWidth,
         this.cellWidth,
-        values[i].toString()
+        values[i].toString(),
+        this.style
       );
     });
   }

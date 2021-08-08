@@ -5,6 +5,16 @@ interface Rectangle extends Two.Rectangl {
   text: Two.Text;
 }
 
+enum Default {
+  TEXT_SIZE = 16,
+  TEXT_WEIGHT = 700,
+}
+
+export interface CellStyle {
+  textSize?: number;
+  textWeight?: number;
+}
+
 export class Cell {
   private rectangle: Rectangle | null = null;
   private two: Two | null = null;
@@ -15,12 +25,21 @@ export class Cell {
     y: number,
     width: number,
     height: number,
-    text: string
+    text: string,
+    style: CellStyle
   ) {
+    const newStyle = {
+      textSize: style.textSize ?? Default.TEXT_SIZE,
+      textWeight: style.textWeight ?? Default.TEXT_WEIGHT,
+    };
+
     this.two = two;
     const rec = two.makeRectangle(x, y, width, height);
     rec.linewidth = 2;
-    const text_ = new Two.Text(text, x, y, { size: 18, weight: 800 });
+    const text_ = new Two.Text(text, x, y, {
+      size: newStyle.textSize,
+      weight: newStyle.textWeight,
+    });
     two.scene.add(text_);
     this.rectangle = Object.assign(rec, { index: 0, text: text_ });
   }
