@@ -1,6 +1,7 @@
-import { Alvis } from "../alvis";
 import { calculateXOffset, calculateYOffset } from "../util";
+import { Movements } from "../common/movements";
 import { Bar } from "./bar";
+import { Colors } from "../common/colors";
 
 enum Default {
   BAR_WIDTH = 50,
@@ -18,8 +19,9 @@ type Style = Partial<Style_>;
 type AllStyles = Style;
 type AllStylesRequired = Required<Style>;
 
-export class Chart extends Alvis {
+export class Chart extends Colors {
   private bars: Bar[] = [];
+  private actualArray: number[] = [];
   private style: AllStylesRequired;
   private xOffset = 0;
   private yOffset = 0;
@@ -34,7 +36,9 @@ export class Chart extends Alvis {
     };
 
     this.updateOffsets(values.length);
+    this.actualArray = values;
     this.bars = this.generateBars(values);
+    super.entities = this.bars;
 
     super.bindResizeCallback(() => {
       this.updateOffsets(this.bars.length);
@@ -83,5 +87,25 @@ export class Chart extends Alvis {
         (this.style.barMaxHeight - this.style.barMinHeight) +
       this.style.barMinHeight
     );
+  }
+
+  wait(ms: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, ms);
+    });
+  }
+
+  swapElements(i1: number, i2: number, duration = 0): Promise<void> {
+    return Movements.swapElements({
+      i1,
+      i2,
+      duration,
+      actualArray: this.actualArray,
+      entities: this.bars,
+      getEventPromise: super.getEventPromise.bind(this),
+      getXOffset: () => this.xOffset,
+    });
   }
 }
