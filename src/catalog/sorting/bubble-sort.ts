@@ -1,6 +1,11 @@
 import { Chart } from "../../chart/chart";
 import { getRandomUnsortedArray } from "../../util";
 
+/*
+O(1)S
+o(n^2)T
+*/
+
 export const bubbleSort = async () => {
   const array = getRandomUnsortedArray(20);
   const alvis = new Chart(document.body, array, {
