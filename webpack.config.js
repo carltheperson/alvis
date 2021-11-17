@@ -33,6 +33,10 @@ module.exports = {
     extensions: ["*", ".js", ".ts"],
   },
 
+  experiments: {
+    topLevelAwait: true,
+  },
+
   devtool: "inline-source-map",
 
   plugins: [
