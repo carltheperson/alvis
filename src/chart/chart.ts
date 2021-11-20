@@ -1,4 +1,4 @@
-import { calculateXOffset, calculateYOffset } from "../util";
+import { calculateXOffset, calculateYOffset, timeout } from "../util";
 import { Movements } from "../common/movements";
 import { Bar } from "./bar";
 import { Colors } from "../common/colors";
@@ -95,11 +95,7 @@ export class Chart extends Colors {
   }
 
   wait(ms: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, ms);
-    });
+    return timeout(ms);
   }
 
   swapElements(i1: number, i2: number, duration = 0): Promise<void> {

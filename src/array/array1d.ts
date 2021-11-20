@@ -1,6 +1,6 @@
 import { Colors } from "../common/colors";
 import { Movements } from "../common/movements";
-import { calculateXOffset, calculateYOffset } from "../util";
+import { calculateXOffset, calculateYOffset, timeout } from "../util";
 import { Cell, CellStyle } from "./cell";
 
 enum Default {
@@ -59,24 +59,21 @@ export class Array1D extends Colors {
   }
 
   private generateCells(values: string[] | number[]): Cell[] {
-    return new Array(values.length).fill(0).map((_, i) => {
+    return values.map((value, i) => {
       return new Cell(
         this.two,
         this.xOffset + i * this.style.cellWidth,
         this.yOffset,
         this.style.cellWidth,
-        values[i].toString(),
+        this.style.cellWidth,
+        value.toString(),
         this.style ?? {}
       );
     });
   }
 
   wait(ms: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, ms);
-    });
+    return timeout(ms);
   }
 
   swapElements(i1: number, i2: number, duration = 0): Promise<void> {

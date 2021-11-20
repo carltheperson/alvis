@@ -2,7 +2,7 @@ import * as Two from "twojs-ts";
 import { Event, EventCallBack } from "./event";
 
 export class Alvis {
-  protected htmlElement: HTMLElement | null = null;
+  protected htmlElement: HTMLElement;
   private events: Event[] = [];
   protected two = new Two({
     autostart: true,

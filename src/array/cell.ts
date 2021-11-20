@@ -23,6 +23,7 @@ export class Cell {
     x: number,
     y: number,
     width: number,
+    height: number,
     text: string,
     style: CellStyle
   ) {
@@ -32,7 +33,7 @@ export class Cell {
     };
 
     this.two = two;
-    const rec = two.makeRectangle(x, y, width, width);
+    const rec = two.makeRectangle(x, y, width, height);
     rec.linewidth = 2;
     const text_ = new Two.Text(text, x, y, {
       size: newStyle.textSize,
