@@ -7,7 +7,7 @@ export class Alvis {
   protected two = new Two({
     autostart: true,
     height: 500,
-    width: window.innerWidth - 25,
+    width: 800,
   });
 
   constructor(element: HTMLElement, title?: string) {
