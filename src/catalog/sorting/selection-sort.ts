@@ -3,7 +3,7 @@ import { getRandomUnsortedArray } from "../../util";
 
 export const selectionSort = async () => {
   const array = getRandomUnsortedArray(20);
-  const alvis = new Chart(document.body, array, {
+  const alvis = new Chart(document.body, "Selection sort", array, {
     barWidth: 30,
   });
   let currentIndex = 0;
@@ -15,10 +15,10 @@ export const selectionSort = async () => {
       }
       alvis.changeColorsInRange(currentIndex, smallestIndex - 1, "white");
       alvis.changeColorsInRange(smallestIndex + 1, array.length - 1, "white");
-      await alvis.changeColor(i, "grey");
-      await alvis.changeColor(smallestIndex, "yellow", 350);
+      await alvis.changeColor(i, "lightgrey");
+      await alvis.changeColor(smallestIndex, "yellow", 300);
     }
-    await alvis.swapElements(currentIndex, smallestIndex, 1000);
+    await alvis.swapElements(currentIndex, smallestIndex, 800);
     alvis.changeColorsInRange(0, currentIndex, "lightgreen");
     currentIndex += 1;
   }

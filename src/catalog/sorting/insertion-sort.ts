@@ -8,7 +8,7 @@ import { getRandomUnsortedArray } from "../../util";
 
 export const insertionSort = async () => {
   const array = getRandomUnsortedArray(20);
-  const alvis = new Chart(document.body, array, {
+  const alvis = new Chart(document.body, "Insertion sort", array, {
     barWidth: 30,
   });
 

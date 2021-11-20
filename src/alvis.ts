@@ -5,13 +5,21 @@ export class Alvis {
   protected htmlElement: HTMLElement | null = null;
   private events: Event[] = [];
   protected two = new Two({
-    fullscreen: true,
     autostart: true,
+    height: 500,
+    width: window.innerWidth - 25,
   });
 
-  constructor(element: HTMLElement) {
-    this.two.appendTo(element);
-    this.htmlElement = element;
+  constructor(element: HTMLElement, title?: string) {
+    const div = document.createElement("div");
+    const h1 = document.createElement("h1");
+    if (title) {
+      h1.innerText = title;
+      div.appendChild(h1);
+    }
+    element.appendChild(div);
+    this.htmlElement = div;
+    this.two.appendTo(this.htmlElement);
 
     this.bindUpdateCallback(() => {
       this.events =

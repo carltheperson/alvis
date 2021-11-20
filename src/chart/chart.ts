@@ -26,8 +26,13 @@ export class Chart extends Colors {
   private xOffset = 0;
   private yOffset = 0;
 
-  constructor(element: HTMLElement, values: number[], style: AllStyles = {}) {
-    super(element);
+  constructor(
+    element: HTMLElement,
+    title: string,
+    values: number[],
+    style: AllStyles = {}
+  ) {
+    super(element, title);
     this.style = {
       ...style,
       barWidth: style.barWidth ?? Default.BAR_WIDTH,
