@@ -1,7 +1,7 @@
 import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
-import { Graph } from "./graph/graph";
+import { Graph, SimpleEdge } from "./graph/graph";
 import { TextGrid } from "./grid/text-grid";
 import { timeout } from "./util";
 
@@ -16,7 +16,14 @@ const values = [
   ["a4", "b4", "c4"],
 ];
 
-new Graph(document.body, values, {
+const edges: SimpleEdge[] = [
+  { node1: { i: 0, j: 0 }, node2: { i: 2, j: 1 } },
+  { node1: { i: 1, j: 0 }, node2: { i: 2, j: 1 } },
+  { node1: { i: 0, j: 1 }, node2: { i: 3, j: 2 } },
+  { node1: { i: 2, j: 1 }, node2: { i: 3, j: 2 } },
+];
+
+new Graph(document.body, values, edges, {
   nodeRadius: 50,
   padding: 60,
 }).changeColor(2, 1, "blue");

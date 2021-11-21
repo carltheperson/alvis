@@ -57,6 +57,10 @@ export class Node {
     this.circle.text.translation.x = x;
   }
 
+  get x() {
+    return this.circle.translation.x;
+  }
+
   set text(text: string) {
     this.circle.text.value = text;
   }

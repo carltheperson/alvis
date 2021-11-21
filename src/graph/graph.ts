@@ -1,4 +1,5 @@
 import { Colors2D } from "../common/colors2d";
+import { Edge, EdgeStyle } from "./edge";
 import { Node, NodeStyle } from "./node";
 
 enum Default {
@@ -12,20 +13,33 @@ interface Style {
 }
 
 type AllStyles = Style & NodeStyle;
-type AllStylesRequired = Required<Style> & NodeStyle;
+type AllStylesRequired = Required<Style> & NodeStyle & EdgeStyle;
+
+export type SimpleEdge = {
+  node1: { i: number; j: number };
+  node2: { i: number; j: number };
+};
 
 export class Graph extends Colors2D {
   private nodes: Node[][];
+  private edges: Edge[];
   private style: AllStylesRequired;
 
-  constructor(element: HTMLElement, values: string[][], style: AllStyles = {}) {
+  constructor(
+    element: HTMLElement,
+    nodes: string[][],
+    edges: SimpleEdge[],
+    style: AllStyles = {}
+  ) {
     super(element);
     this.style = {
       ...style,
       nodeRadius: style.nodeRadius ?? Default.NODE_RADIUS,
       padding: style.padding ?? Default.PADDING,
     };
-    this.nodes = this.generateNodes(values);
+    this.nodes = this.generateNodes(nodes);
+    this.edges = this.generateEdges(edges);
+    this.displayAllNodesOnTop();
     this.entities = this.nodes;
     this.updateCanvasSize();
   }
@@ -52,6 +66,22 @@ export class Graph extends Colors2D {
         values_,
         i * this.style.nodeRadius * 2 + this.style.padding * i
       );
+    });
+  }
+
+  private displayAllNodesOnTop() {
+    this.nodes.forEach((nodes) => {
+      nodes.forEach((node) => {
+        node.displayOnTop();
+      });
+    });
+  }
+
+  private generateEdges(values: SimpleEdge[]) {
+    return values.map((value) => {
+      const node1 = this.nodes[value.node1.i][value.node1.j];
+      const node2 = this.nodes[value.node2.i][value.node2.j];
+      return new Edge(this.two, node1.x, node1.y, node2.x, node2.y);
     });
   }
 
