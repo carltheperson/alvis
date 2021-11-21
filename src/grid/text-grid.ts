@@ -40,7 +40,7 @@ export class TextGrid extends Colors2D {
         this.style.cellWidth,
         this.style.cellHeight,
         value,
-        this.style ?? {}
+        this.style
       );
     });
   }

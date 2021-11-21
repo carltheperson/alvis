@@ -1,16 +1,30 @@
 import { Colors2D } from "../common/colors2d";
-import { Node } from "./node";
+import { Node, NodeStyle } from "./node";
 
 enum Default {
   NODE_RADIUS = 30,
   PADDING = 10,
 }
 
+interface Style {
+  nodeRadius?: number;
+  padding?: number;
+}
+
+type AllStyles = Style & NodeStyle;
+type AllStylesRequired = Required<Style> & NodeStyle;
+
 export class Graph extends Colors2D {
   private nodes: Node[][];
+  private style: AllStylesRequired;
 
-  constructor(element: HTMLElement, values: string[][]) {
+  constructor(element: HTMLElement, values: string[][], style: AllStyles = {}) {
     super(element);
+    this.style = {
+      ...style,
+      nodeRadius: style.nodeRadius ?? Default.NODE_RADIUS,
+      padding: style.padding ?? Default.PADDING,
+    };
     this.nodes = this.generateNodes(values);
     this.entities = this.nodes;
     this.updateCanvasSize();
@@ -20,13 +34,14 @@ export class Graph extends Colors2D {
     return values.map((value, i) => {
       return new Node(
         this.two,
-        i * Default.NODE_RADIUS * 2 +
-          Default.NODE_RADIUS +
+        i * this.style.nodeRadius * 2 +
+          this.style.nodeRadius +
           1 +
-          Default.PADDING * i,
-        extraYOffset + Default.NODE_RADIUS + 1,
-        Default.NODE_RADIUS,
-        value
+          this.style.padding * i,
+        extraYOffset + this.style.nodeRadius + 1,
+        this.style.nodeRadius,
+        value,
+        this.style
       );
     });
   }
@@ -35,17 +50,17 @@ export class Graph extends Colors2D {
     return values.map((values_, i) => {
       return this.generateNodes1d(
         values_,
-        i * Default.NODE_RADIUS * 2 + Default.PADDING * i
+        i * this.style.nodeRadius * 2 + this.style.padding * i
       );
     });
   }
 
   private updateCanvasSize() {
     this.canvasWidth =
-      Default.NODE_RADIUS * 2 * this.nodes[0].length +
-      Default.PADDING * (this.nodes[0].length - 1);
+      this.style.nodeRadius * 2 * this.nodes[0].length +
+      this.style.padding * (this.nodes[0].length - 1);
     this.canvasHeight =
-      Default.NODE_RADIUS * 2 * this.nodes.length +
-      Default.PADDING * (this.nodes.length - 1);
+      this.style.nodeRadius * 2 * this.nodes.length +
+      this.style.padding * (this.nodes.length - 1);
   }
 }

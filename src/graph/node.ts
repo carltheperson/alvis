@@ -1,5 +1,15 @@
 import * as Two from "twojs-ts";
 
+enum Default {
+  TEXT_SIZE = 16,
+  TEXT_WEIGHT = 700,
+}
+
+export interface NodeStyle {
+  textSize?: number;
+  textWeight?: number;
+}
+
 interface Circle extends Two.Circle {
   text: Two.Text;
 }
@@ -8,13 +18,25 @@ export class Node {
   private circle: Circle;
   private two: Two;
 
-  constructor(two: Two, x: number, y: number, radius: number, text: string) {
+  constructor(
+    two: Two,
+    x: number,
+    y: number,
+    radius: number,
+    text: string,
+    style: NodeStyle = {}
+  ) {
     this.two = two;
+
+    const newStyle = {
+      textSize: style.textSize ?? Default.TEXT_SIZE,
+      textWeight: style.textWeight ?? Default.TEXT_WEIGHT,
+    };
 
     const circle = this.two.makeCircle(x, y, radius);
     const text_ = new Two.Text(text, x, y, {
-      size: 16,
-      weight: 700,
+      size: newStyle.textSize,
+      weight: newStyle.textWeight,
     });
 
     two.scene.add(text_);
