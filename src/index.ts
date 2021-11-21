@@ -2,6 +2,7 @@ import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
 import { TextGrid } from "./grid/text-grid";
+import { timeout } from "./util";
 
 // bubbleSort();
 // insertionSort();
@@ -24,3 +25,9 @@ grid.changeColor(2, 1, "blue");
 grid.changeColorForColumn(0, "green");
 grid.changeColorForRow(3, "red");
 // grid.changeColor();
+
+grid.setText(2, 1, "blue");
+await timeout(500);
+grid.setText(2, 1, "blue2");
+await timeout(500);
+grid.setText(2, 1, "blue");

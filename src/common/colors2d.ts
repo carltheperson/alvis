@@ -24,11 +24,11 @@ export class Colors2D extends Alvis {
   }
 
   changeColor(i: number, j: number, color: string, duration = 0) {
-    this.colors[i].changeColor(j, color, duration);
+    return this.colors[i].changeColor(j, color, duration);
   }
 
   changeColorForRow(i: number, color: string, duration = 0) {
-    this.colors[i].changeAllColors(color, duration);
+    return this.colors[i].changeAllColors(color, duration);
   }
 
   async changeColorForColumn(j: number, color: string, duration = 0) {

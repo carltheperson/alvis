@@ -69,6 +69,10 @@ export class Cell {
     } else return -1;
   }
 
+  set text(text: string) {
+    if (this.rectangle) this.rectangle.text.value = text;
+  }
+
   set color(color: string) {
     if (this.rectangle && color) this.rectangle.fill = color;
   }

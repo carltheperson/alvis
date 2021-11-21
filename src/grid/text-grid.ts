@@ -49,4 +49,8 @@ export class TextGrid extends Colors2D {
       return this.generateCells1d(values_, i * this.style.cellHeight);
     });
   }
+
+  setText(i: number, j: number, text: string) {
+    this.cells[i][j].text = text;
+  }
 }
