@@ -44,6 +44,7 @@ export class Chart extends Colors {
     this.actualArray = values;
     this.bars = this.generateBars(values);
     super.entities = this.bars;
+    this.updateCanvasSize();
 
     super.bindResizeCallback(() => {
       this.updateOffsets(this.bars.length);
@@ -92,6 +93,11 @@ export class Chart extends Colors {
         (this.style.barMaxHeight - this.style.barMinHeight) +
       this.style.barMinHeight
     );
+  }
+
+  private updateCanvasSize() {
+    this.canvasWidth = this.style.barWidth * this.bars.length;
+    this.canvasHeight = this.style.barMaxHeight;
   }
 
   wait(ms: number): Promise<void> {

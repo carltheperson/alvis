@@ -28,6 +28,7 @@ export class TextGrid extends Colors2D {
     };
     this.cells = this.generateCells(values);
     this.entities = this.cells;
+    this.updateCanvasSize();
   }
 
   private generateCells1d(values: string[], extraYOffset: number) {
@@ -48,6 +49,11 @@ export class TextGrid extends Colors2D {
     return values.map((values_, i) => {
       return this.generateCells1d(values_, i * this.style.cellHeight);
     });
+  }
+
+  private updateCanvasSize() {
+    this.canvasWidth = this.style.cellWidth * this.cells[0].length;
+    this.canvasHeight = this.style.cellHeight * this.cells.length;
   }
 
   setText(i: number, j: number, text: string) {

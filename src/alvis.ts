@@ -6,8 +6,6 @@ export class Alvis {
   private events: Event[] = [];
   protected two = new Two({
     autostart: true,
-    height: 500,
-    width: 800,
   });
 
   constructor(element: HTMLElement, title?: string) {
@@ -62,5 +60,13 @@ export class Alvis {
           );
       }).observe(this.htmlElement);
     }
+  }
+
+  set canvasWidth(width: number) {
+    this.two.width = width + 1.5;
+  }
+
+  set canvasHeight(height: number) {
+    this.two.height = height + 1.5;
   }
 }

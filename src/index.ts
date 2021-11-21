@@ -16,7 +16,7 @@ const values = [
   ["a4", "b4", "c4"],
 ];
 
-new Graph(document.body, values);
+// new Graph(document.body, values).changeColor(2, 1, "blue");
 
 // const grid = new TextGrid(document.body, values, {
 //   cellWidth: 100,
