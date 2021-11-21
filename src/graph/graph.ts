@@ -21,13 +21,13 @@ export type SimpleEdge = {
 };
 
 export class Graph extends Colors2D {
-  private nodes: Node[][];
+  private nodes: (Node | null)[][];
   private edges: Edge[];
   private style: AllStylesRequired;
 
   constructor(
     element: HTMLElement,
-    nodes: string[][],
+    nodes: (string | null)[][],
     edges: SimpleEdge[],
     style: AllStyles = {}
   ) {
@@ -40,12 +40,13 @@ export class Graph extends Colors2D {
     this.nodes = this.generateNodes(nodes);
     this.edges = this.generateEdges(edges);
     this.displayAllNodesOnTop();
-    this.entities = this.nodes;
+    this.entities = this.nodes as Node[][];
     this.updateCanvasSize();
   }
 
-  private generateNodes1d(values: string[], extraYOffset: number) {
+  private generateNodes1d(values: (string | null)[], extraYOffset: number) {
     return values.map((value, i) => {
+      if (!value) return null;
       return new Node(
         this.two,
         i * this.style.nodeRadius * 2 +
@@ -60,7 +61,7 @@ export class Graph extends Colors2D {
     });
   }
 
-  private generateNodes(values: string[][]) {
+  private generateNodes(values: (string | null)[][]) {
     return values.map((values_, i) => {
       return this.generateNodes1d(
         values_,
@@ -72,7 +73,7 @@ export class Graph extends Colors2D {
   private displayAllNodesOnTop() {
     this.nodes.forEach((nodes) => {
       nodes.forEach((node) => {
-        node.displayOnTop();
+        if (node) node.displayOnTop();
       });
     });
   }
@@ -81,6 +82,7 @@ export class Graph extends Colors2D {
     return values.map((value) => {
       const node1 = this.nodes[value.node1.i][value.node1.j];
       const node2 = this.nodes[value.node2.i][value.node2.j];
+      if (!node1 || !node2) throw new Error(`Could not find node1 or node2`);
       return new Edge(this.two, node1.x, node1.y, node2.x, node2.y);
     });
   }

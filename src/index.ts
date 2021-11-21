@@ -10,10 +10,10 @@ import { timeout } from "./util";
 // selectionSort();
 
 const values = [
-  ["aaaaaa", "b", "c"],
-  ["a2", "b2", "c2"],
-  ["a3", "b3", "c3"],
-  ["a4", "b4", "c4"],
+  ["aaaaaa", "b", null],
+  ["a2", null, "c2"],
+  ["a3", "b3", null],
+  [null, "b4", "c4"],
 ];
 
 const edges: SimpleEdge[] = [
