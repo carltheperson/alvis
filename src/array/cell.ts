@@ -15,8 +15,8 @@ export interface CellStyle {
 }
 
 export class Cell {
-  private rectangle: Rectangle | null = null;
-  private two: Two | null = null;
+  private rectangle: Rectangle;
+  private two: Two;
 
   constructor(
     two: Two,
@@ -44,54 +44,46 @@ export class Cell {
   }
 
   set y(y: number) {
-    if (this.rectangle) {
-      this.rectangle.translation.y = y;
-      this.rectangle.text.translation.y = y;
-    }
+    this.rectangle.translation.y = y;
+    this.rectangle.text.translation.y = y;
   }
 
   get y(): number {
-    if (this.rectangle) {
-      return this.rectangle.translation.y;
-    } else return -1;
+    return this.rectangle.translation.y;
   }
 
   set x(x: number) {
-    if (this.rectangle) {
-      this.rectangle.translation.x = x;
-      this.rectangle.text.translation.x = x;
-    }
+    this.rectangle.translation.x = x;
+    this.rectangle.text.translation.x = x;
   }
 
   get x(): number {
-    if (this.rectangle) {
-      return this.rectangle.translation.x;
-    } else return -1;
+    return this.rectangle.translation.x;
   }
 
   set text(text: string) {
-    if (this.rectangle) this.rectangle.text.value = text;
+    this.rectangle.text.value = text;
   }
 
   set color(color: string) {
-    if (this.rectangle && color) this.rectangle.fill = color;
+    this.rectangle.fill = color;
   }
 
   set strokeWidth(strokeWidth: number) {
-    if (this.rectangle && strokeWidth) this.rectangle.linewidth = strokeWidth;
+    this.rectangle.linewidth = strokeWidth;
   }
 
-  displayOnTop(): void {
-    const recClone = this.rectangle?.clone();
-    const textClone = this.rectangle?.text?.clone();
+  displayOnTop() {
+    const recClone = this.rectangle.clone();
+    const textClone = this.rectangle.text.clone();
     this.removeGraphicalElement();
     this.rectangle = Object.assign(recClone, {
       text: textClone,
     });
   }
 
-  removeGraphicalElement(): void {
-    this.rectangle?.remove();
-    this.two?.scene.remove(this.rectangle?.text);
+  removeGraphicalElement() {
+    this.rectangle.remove();
+    this.two.scene.remove(this.rectangle.text);
   }
 }
