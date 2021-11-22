@@ -69,8 +69,16 @@ export class Node {
     this.circle.text.value = text;
   }
 
+  get text() {
+    return this.circle.text.value;
+  }
+
   set color(color: string) {
     this.circle.fill = color;
+  }
+
+  get color() {
+    return this.circle.fill;
   }
 
   displayOnTop() {

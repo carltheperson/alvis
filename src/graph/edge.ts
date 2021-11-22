@@ -50,13 +50,18 @@ export class Edge {
     const unitVec = convertVectorToUnitVector({ x: x1 - x2, y: y1 - y2 });
     const angle = convertVectorToRadians(unitVec);
 
-    const rotatedPoint1 = rotate(x2, y2, x2 + 15, y2 + 15, angle);
-    const rotatedPoint2 = rotate(x2, y2, x2 - 15, y2 + 15, angle);
+    const rotatedPoint1 = rotate(x2, y2, x2 + 10, y2 + 10, angle);
+    const rotatedPoint2 = rotate(x2, y2, x2 - 10, y2 + 10, angle);
     const lines = [
       this.two.makeLine(x2, y2, rotatedPoint1.x, rotatedPoint1.y),
       this.two.makeLine(x2, y2, rotatedPoint2.x, rotatedPoint2.y),
     ];
     lines.forEach((line) => (line.linewidth = this.style.lineWidth - 0.5));
     return lines;
+  }
+
+  set color(color: string) {
+    this.line.stroke = color;
+    this.arrowLines.forEach((line) => (line.stroke = color));
   }
 }

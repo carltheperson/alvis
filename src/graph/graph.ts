@@ -29,7 +29,8 @@ export type SimpleEdge = {
 export class Graph extends Alvis {
   public head: Node;
   private style: AllStylesRequired;
-  private edgesDisplayed: Record<string, true> = {};
+  private edgesIsDisplayed: Record<string, true> = {};
+  private nodesGenerated: Record<string, Node> = {};
 
   constructor(
     element: HTMLElement,
@@ -72,9 +73,11 @@ export class Graph extends Alvis {
   ) {
     return simpleEdges
       .map((simpleEdge) => {
-        if (this.edgesDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`])
+        if (
+          this.edgesIsDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`]
+        )
           return null;
-        this.edgesDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`] =
+        this.edgesIsDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`] =
           true;
         const node = this.generateNode(simpleEdge.node);
         const unitVec = convertVectorToUnitVector({
@@ -106,15 +109,19 @@ export class Graph extends Alvis {
       this.style.nodeRadius +
       1 +
       this.style.padding * j;
-    const node = new Node(
-      this.two,
-      x,
-      y,
-      this.style.nodeRadius,
-      simpleNode.text,
-      this.generateEdges(x, y, simpleNode.edges)
-    );
-    return node;
+    if (!this.nodesGenerated[`${x}-${y}`]) {
+      const node = new Node(
+        this.two,
+        x,
+        y,
+        this.style.nodeRadius,
+        simpleNode.text,
+        this.generateEdges(x, y, simpleNode.edges)
+      );
+      this.nodesGenerated[`${x}-${y}`] = node;
+      return node;
+    }
+    return this.nodesGenerated[`${x}-${y}`];
   }
 
   private updateCanvasSize(simpleHead: SimpleNode) {

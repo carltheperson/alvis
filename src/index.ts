@@ -2,6 +2,7 @@ import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
 import { Graph, SimpleEdge, SimpleNode } from "./graph/graph";
+import { Node } from "./graph/node";
 import { TextGrid } from "./grid/text-grid";
 import { timeout } from "./util";
 
@@ -84,12 +85,13 @@ you.edges.push({ node: alice });
 you.edges.push({ node: clare });
 
 bob.edges.push({ node: anuj });
-bob.edges.push({ node: peggy });
-
-alice.edges.push({ node: peggy });
 
 clare.edges.push({ node: thom });
 clare.edges.push({ node: jonny });
+
+bob.edges.push({ node: peggy });
+alice.edges.push({ node: peggy });
+
 // const a2: SimpleNode = {
 //   text: "a2",
 //   gridPosition: { i: 1, j: 0 },
@@ -104,3 +106,15 @@ clare.edges.push({ node: jonny });
 
 const graph = new Graph(document.body, you);
 graph.head.color = "lightgreen";
+
+const color = async (node: Node) => {
+  node.color = "lightgreen";
+  await timeout(1000);
+
+  for (const edge of node.edges) {
+    edge.color = "red";
+    await timeout(1000);
+    await color(edge.node);
+  }
+};
+color(graph.head);
