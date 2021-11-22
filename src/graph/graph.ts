@@ -1,10 +1,11 @@
-import { Colors2D } from "../common/colors2d";
+import { Alvis } from "../alvis";
+import { convertVectorToUnitVector } from "../util";
 import { Edge, EdgeStyle } from "./edge";
 import { Node, NodeStyle } from "./node";
 
 enum Default {
-  NODE_RADIUS = 30,
-  PADDING = 10,
+  NODE_RADIUS = 50,
+  PADDING = 100,
 }
 
 interface Style {
@@ -15,84 +16,104 @@ interface Style {
 type AllStyles = Style & NodeStyle;
 type AllStylesRequired = Required<Style> & NodeStyle & EdgeStyle;
 
-export type SimpleEdge = {
-  node1: { i: number; j: number };
-  node2: { i: number; j: number };
+export type SimpleNode = {
+  text: string;
+  gridPosition: { i: number; j: number };
+  edges: SimpleEdge[];
 };
 
-export class Graph extends Colors2D {
-  private nodes: (Node | null)[][];
-  private edges: Edge[];
+export type SimpleEdge = {
+  node: SimpleNode;
+};
+
+export class Graph extends Alvis {
+  public head: Node;
   private style: AllStylesRequired;
 
   constructor(
     element: HTMLElement,
-    nodes: (string | null)[][],
-    edges: SimpleEdge[],
+    headNode: SimpleNode,
     style: AllStyles = {}
   ) {
     super(element);
+
     this.style = {
       ...style,
       nodeRadius: style.nodeRadius ?? Default.NODE_RADIUS,
       padding: style.padding ?? Default.PADDING,
     };
-    this.nodes = this.generateNodes(nodes);
-    this.edges = this.generateEdges(edges);
-    this.displayAllNodesOnTop();
-    this.entities = this.nodes as Node[][];
-    this.updateCanvasSize();
+
+    this.head = this.generateNode(headNode);
+
+    this.updateCanvasSize(headNode);
   }
 
-  private generateNodes1d(values: (string | null)[], extraYOffset: number) {
-    return values.map((value, i) => {
-      if (!value) return null;
-      return new Node(
-        this.two,
-        i * this.style.nodeRadius * 2 +
-          this.style.nodeRadius +
-          1 +
-          this.style.padding * i,
-        extraYOffset + this.style.nodeRadius + 1,
-        this.style.nodeRadius,
-        value,
-        this.style
-      );
-    });
+  private getLargestGridPosition(
+    simpleNode: SimpleNode,
+    pos: "i" | "j"
+  ): number {
+    if (simpleNode.edges.length === 0) {
+      return simpleNode.gridPosition[pos];
+    }
+    return Math.max(
+      ...simpleNode.edges.map((edge) => {
+        return this.getLargestGridPosition(edge.node, pos);
+      })
+    );
   }
 
-  private generateNodes(values: (string | null)[][]) {
-    return values.map((values_, i) => {
-      return this.generateNodes1d(
-        values_,
-        i * this.style.nodeRadius * 2 + this.style.padding * i
-      );
-    });
-  }
-
-  private displayAllNodesOnTop() {
-    this.nodes.forEach((nodes) => {
-      nodes.forEach((node) => {
-        if (node) node.displayOnTop();
+  private generateEdges(
+    startX: number,
+    startY: number,
+    simpleEdges: SimpleEdge[]
+  ) {
+    return simpleEdges.map((simpleEdge) => {
+      const node = this.generateNode(simpleEdge.node);
+      const unitVec = convertVectorToUnitVector({
+        x: startX - node.x,
+        y: startY - node.y,
       });
+      return new Edge(
+        this.two,
+        node,
+        startX - unitVec.x * this.style.nodeRadius,
+        startY - unitVec.y * this.style.nodeRadius,
+        node.x + unitVec.x * this.style.nodeRadius,
+        node.y + unitVec.y * this.style.nodeRadius
+      );
     });
   }
 
-  private generateEdges(values: SimpleEdge[]) {
-    return values.map((value) => {
-      const node1 = this.nodes[value.node1.i][value.node1.j];
-      const node2 = this.nodes[value.node2.i][value.node2.j];
-      if (!node1 || !node2) throw new Error(`Could not find node1 or node2`);
-      return new Edge(this.two, node1.x, node1.y, node2.x, node2.y);
-    });
+  private generateNode(simpleNode: SimpleNode): Node {
+    const i = simpleNode.gridPosition.j;
+    const j = simpleNode.gridPosition.i;
+    const x =
+      i * this.style.nodeRadius * 2 +
+      this.style.nodeRadius +
+      1 +
+      this.style.padding * i;
+    const y =
+      j * this.style.nodeRadius * 2 +
+      this.style.nodeRadius +
+      1 +
+      this.style.padding * j;
+    const node = new Node(
+      this.two,
+      x,
+      y,
+      this.style.nodeRadius,
+      simpleNode.text,
+      this.generateEdges(x, y, simpleNode.edges)
+    );
+    return node;
   }
 
-  private updateCanvasSize() {
+  private updateCanvasSize(simpleHead: SimpleNode) {
+    const maxI = this.getLargestGridPosition(simpleHead, "i");
+    const maxJ = this.getLargestGridPosition(simpleHead, "j");
     this.canvasWidth =
-      this.style.nodeRadius * 2 * this.nodes[0].length +
-      this.style.padding * (this.nodes[0].length - 1);
+      this.style.nodeRadius * 2 * (maxJ + 1) + this.style.padding * maxJ;
     this.canvasHeight =
-      this.style.nodeRadius * 2 * this.nodes.length +
-      this.style.padding * (this.nodes.length - 1);
+      this.style.nodeRadius * 2 * (maxI + 1) + this.style.padding * maxI;
   }
 }

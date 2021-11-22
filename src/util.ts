@@ -34,3 +34,33 @@ export const timeout = (ms: number) => {
     }, ms);
   });
 };
+
+const getVectorLength = ({ x, y }: { x: number; y: number }) => {
+  return Math.sqrt(x * x + y * y);
+};
+
+export const convertVectorToUnitVector = (vec: { x: number; y: number }) => {
+  const length = getVectorLength(vec);
+  return {
+    x: vec.x / length,
+    y: vec.y / length,
+  };
+};
+
+export const convertVectorToRadians = (vec: { x: number; y: number }) => {
+  return Math.atan2(vec.x, vec.y);
+};
+
+export const rotate = (
+  cx: number,
+  cy: number,
+  x: number,
+  y: number,
+  radians: number
+) => {
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const nx = cos * (x - cx) + sin * (y - cy) + cx;
+  const ny = cos * (y - cy) - sin * (x - cx) + cy;
+  return { x: nx, y: ny };
+};

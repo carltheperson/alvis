@@ -19,6 +19,8 @@ export class Colors2D extends Alvis {
     this.colors = this.allEntities.map((entities) => {
       const colors = new Colors(this.htmlElement);
       colors.entities = entities;
+      colors.canvasWidth = 0;
+      colors.canvasHeight = 0;
       return colors;
     });
   }

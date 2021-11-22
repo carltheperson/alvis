@@ -1,4 +1,5 @@
 import * as Two from "twojs-ts";
+import { Edge } from "./edge";
 
 enum Default {
   TEXT_SIZE = 16,
@@ -17,6 +18,7 @@ interface Circle extends Two.Circle {
 export class Node {
   private circle: Circle;
   private two: Two;
+  public edges: Edge[];
 
   constructor(
     two: Two,
@@ -24,9 +26,11 @@ export class Node {
     y: number,
     radius: number,
     text: string,
+    edges: Edge[],
     style: NodeStyle = {}
   ) {
     this.two = two;
+    this.edges = edges;
 
     const newStyle = {
       textSize: style.textSize ?? Default.TEXT_SIZE,
