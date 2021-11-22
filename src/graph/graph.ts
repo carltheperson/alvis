@@ -29,6 +29,7 @@ export type SimpleEdge = {
 export class Graph extends Alvis {
   public head: Node;
   private style: AllStylesRequired;
+  private edgesDisplayed: Record<string, true> = {};
 
   constructor(
     element: HTMLElement,
@@ -43,7 +44,7 @@ export class Graph extends Alvis {
       padding: style.padding ?? Default.PADDING,
     };
 
-    this.head = this.generateNode(headNode);
+    this.head = this.generateNode(headNode) as Node;
 
     this.updateCanvasSize(headNode);
   }
@@ -52,14 +53,16 @@ export class Graph extends Alvis {
     simpleNode: SimpleNode,
     pos: "i" | "j"
   ): number {
-    if (simpleNode.edges.length === 0) {
-      return simpleNode.gridPosition[pos];
-    }
-    return Math.max(
-      ...simpleNode.edges.map((edge) => {
-        return this.getLargestGridPosition(edge.node, pos);
-      })
-    );
+    const nodesLookedAt: Record<string, boolean> = {};
+    const nodePositions: number[] = [];
+    const setNodePositions = (simpleNode: SimpleNode) => {
+      if (nodesLookedAt[JSON.stringify(simpleNode.gridPosition)]) return;
+      nodePositions.push(simpleNode.gridPosition[pos]);
+      nodesLookedAt[JSON.stringify(simpleNode.gridPosition)] = true;
+      simpleNode.edges.forEach((edge) => setNodePositions(edge.node));
+    };
+    setNodePositions(simpleNode);
+    return Math.max(...nodePositions);
   }
 
   private generateEdges(
@@ -67,21 +70,27 @@ export class Graph extends Alvis {
     startY: number,
     simpleEdges: SimpleEdge[]
   ) {
-    return simpleEdges.map((simpleEdge) => {
-      const node = this.generateNode(simpleEdge.node);
-      const unitVec = convertVectorToUnitVector({
-        x: startX - node.x,
-        y: startY - node.y,
-      });
-      return new Edge(
-        this.two,
-        node,
-        startX - unitVec.x * this.style.nodeRadius,
-        startY - unitVec.y * this.style.nodeRadius,
-        node.x + unitVec.x * this.style.nodeRadius,
-        node.y + unitVec.y * this.style.nodeRadius
-      );
-    });
+    return simpleEdges
+      .map((simpleEdge) => {
+        if (this.edgesDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`])
+          return null;
+        this.edgesDisplayed[`${startX}-${startY}-${simpleEdge.node.text}`] =
+          true;
+        const node = this.generateNode(simpleEdge.node);
+        const unitVec = convertVectorToUnitVector({
+          x: startX - node.x,
+          y: startY - node.y,
+        });
+        return new Edge(
+          this.two,
+          node,
+          startX - unitVec.x * this.style.nodeRadius,
+          startY - unitVec.y * this.style.nodeRadius,
+          node.x + unitVec.x * this.style.nodeRadius,
+          node.y + unitVec.y * this.style.nodeRadius
+        );
+      })
+      .filter(Boolean) as Edge[];
   }
 
   private generateNode(simpleNode: SimpleNode): Node {

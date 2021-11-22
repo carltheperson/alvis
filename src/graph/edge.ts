@@ -56,7 +56,7 @@ export class Edge {
       this.two.makeLine(x2, y2, rotatedPoint1.x, rotatedPoint1.y),
       this.two.makeLine(x2, y2, rotatedPoint2.x, rotatedPoint2.y),
     ];
-    lines.forEach((line) => (line.linewidth = this.style.lineWidth));
+    lines.forEach((line) => (line.linewidth = this.style.lineWidth - 0.5));
     return lines;
   }
 }

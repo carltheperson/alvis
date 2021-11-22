@@ -31,4 +31,76 @@ const headNode: SimpleNode = {
   ],
 };
 
-const graph = new Graph(document.body, headNode);
+const anuj: SimpleNode = {
+  gridPosition: { i: 0, j: 0 },
+  text: "Anuj",
+  edges: [],
+};
+
+const peggy: SimpleNode = {
+  gridPosition: { i: 1, j: 1 },
+  text: "Peggy",
+  edges: [],
+};
+
+const bob: SimpleNode = {
+  gridPosition: { i: 0, j: 1 },
+  text: "Bob",
+  edges: [],
+};
+
+const you: SimpleNode = {
+  gridPosition: { i: 0, j: 2 },
+  text: "You",
+  edges: [],
+};
+
+const alice: SimpleNode = {
+  gridPosition: { i: 1, j: 2 },
+  text: "Alice",
+  edges: [],
+};
+
+const clare: SimpleNode = {
+  gridPosition: { i: 0, j: 3 },
+  text: "Clare",
+  edges: [],
+};
+
+const thom: SimpleNode = {
+  gridPosition: { i: 0, j: 4 },
+  text: "Thom",
+  edges: [],
+};
+
+const jonny: SimpleNode = {
+  gridPosition: { i: 1, j: 3 },
+  text: "Jonny",
+  edges: [],
+};
+
+you.edges.push({ node: bob });
+you.edges.push({ node: alice });
+you.edges.push({ node: clare });
+
+bob.edges.push({ node: anuj });
+bob.edges.push({ node: peggy });
+
+alice.edges.push({ node: peggy });
+
+clare.edges.push({ node: thom });
+clare.edges.push({ node: jonny });
+// const a2: SimpleNode = {
+//   text: "a2",
+//   gridPosition: { i: 1, j: 0 },
+//   edges: [],
+// };
+
+// const c4: SimpleNode = {
+//   text: "c4",
+//   gridPosition: { i: 2, j: 2 },
+//   edges: [],
+// };
+
+const graph = new Graph(document.body, you);
+graph.head.color = "lightgreen";
