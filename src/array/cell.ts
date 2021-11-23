@@ -69,6 +69,13 @@ export class Cell {
     this.rectangle.fill = color;
   }
 
+  set opacity(opacity: number) {
+    this.rectangle.opacity = opacity;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.rectangle.text.opacity = opacity;
+  }
+
   set strokeWidth(strokeWidth: number) {
     this.rectangle.linewidth = strokeWidth;
   }

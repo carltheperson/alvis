@@ -2,7 +2,7 @@ import * as Two from "twojs-ts";
 
 export class Bar {
   private two: Two | null = null;
-  private rectangle: Two.Rectangl | null = null;
+  private rectangle: Two.Rectangl;
 
   constructor(two: Two, x: number, y: number, width: number, height: number) {
     this.two = two;
@@ -31,6 +31,10 @@ export class Bar {
     if (this.rectangle) {
       return this.rectangle.translation.x;
     } else return -1;
+  }
+
+  set opacity(opacity: number) {
+    this.rectangle.opacity = opacity;
   }
 
   set color(color: string) {

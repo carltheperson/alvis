@@ -116,7 +116,8 @@ export class Graph extends Alvis {
         y,
         this.style.nodeRadius,
         simpleNode.text,
-        this.generateEdges(x, y, simpleNode.edges)
+        this.generateEdges(x, y, simpleNode.edges),
+        this.style
       );
       this.nodesGenerated[`${x}-${y}`] = node;
       return node;

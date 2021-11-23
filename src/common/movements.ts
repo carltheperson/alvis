@@ -3,6 +3,7 @@ import { EventCallBack } from "../event";
 interface Entity {
   x: number;
   y: number;
+  opacity: number;
   displayOnTop: () => void;
 }
 
@@ -60,6 +61,70 @@ export class Movements {
         const temp = entities[i1];
         entities[i1] = entities[i2];
         entities[i2] = temp;
+        next();
+      }
+
+      lastMs = ms;
+    });
+  }
+
+  public static fadeOut(
+    entity: Entity,
+    duration: number,
+    getEventPromise: (callback: EventCallBack) => Promise<void>
+  ) {
+    let currentOpacity = 1;
+    let lastMs = 0;
+    return getEventPromise((ms, next) => {
+      currentOpacity -= (ms - lastMs) / duration;
+      lastMs = ms;
+      entity.opacity = currentOpacity;
+
+      if (ms > duration) {
+        entity.opacity = 0;
+        next();
+      }
+    });
+  }
+
+  public static fadeIn(
+    entity: Entity,
+    duration: number,
+    getEventPromise: (callback: EventCallBack) => Promise<void>
+  ) {
+    let currentOpacity = 0;
+    let lastMs = 0;
+    return getEventPromise((ms, next) => {
+      currentOpacity += (ms - lastMs) / duration;
+      lastMs = ms;
+      entity.opacity = currentOpacity;
+
+      if (ms > duration) {
+        entity.opacity = 1;
+        next();
+      }
+    });
+  }
+
+  public static moveLeft(
+    entity: Entity,
+    amount: number,
+    duration: number,
+    getXOffset: () => number,
+    getEventPromise: (callback: EventCallBack) => Promise<void>
+  ) {
+    const firstX = entity.x;
+    let lastMs = 0;
+    const endX = firstX - amount;
+    const lengthBetween = Math.abs(firstX - endX);
+    return getEventPromise((ms, next) => {
+      const lengthPrMs = lengthBetween / duration;
+      const diffMs = Math.abs(lastMs - ms);
+      const travel = diffMs * lengthPrMs;
+      entity.x -= travel;
+
+      if (ms > duration) {
+        entity.x = endX;
         next();
       }
 
