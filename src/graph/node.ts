@@ -81,6 +81,10 @@ export class Node {
     return this.circle.fill;
   }
 
+  set allEdgeColors(color: string) {
+    this.edges.forEach((edge) => (edge.color = color));
+  }
+
   displayOnTop() {
     const circleClone = this.circle.clone();
     const textClone = this.circle.text.clone();

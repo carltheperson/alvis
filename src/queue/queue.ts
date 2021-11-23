@@ -4,7 +4,7 @@ import { Movements } from "../common/movements";
 import { timeout } from "../util";
 
 enum Default {
-  CELL_WIDTH = 100,
+  CELL_WIDTH = 75,
   CELL_MAX_AMOUNT = 8,
 }
 
@@ -17,14 +17,14 @@ type Style = Partial<Style_>;
 type AllStyles = Style & CellStyle;
 type AllStylesRequired = Required<Style> & CellStyle;
 
-export class Queue extends Colors {
+export class Queue<T extends { text: string } | string> extends Colors {
   private cells: Cell[] = [];
-  private actualArray: string[] = [];
+  private actualArray: T[] = [];
   private style: AllStylesRequired;
   private xOffset = 0;
   private yOffset = 0;
 
-  constructor(element: HTMLElement, values: string[], style: AllStyles = {}) {
+  constructor(element: HTMLElement, values: T[], style: AllStyles = {}) {
     super(element);
     this.style = {
       ...style,
@@ -40,7 +40,14 @@ export class Queue extends Colors {
     this.updateCanvasSize();
   }
 
-  private generateCells(values: string[]): Cell[] {
+  private getText(input: T) {
+    if (typeof input === "string") {
+      return input;
+    }
+    return input.text;
+  }
+
+  private generateCells(values: T[]): Cell[] {
     return values.map((value, i) => {
       return new Cell(
         this.two,
@@ -48,7 +55,7 @@ export class Queue extends Colors {
         this.yOffset,
         this.style.cellWidth,
         this.style.cellWidth,
-        value,
+        this.getText(value),
         this.style
       );
     });
@@ -56,6 +63,10 @@ export class Queue extends Colors {
 
   wait(ms: number): Promise<void> {
     return timeout(ms);
+  }
+
+  get length() {
+    return this.actualArray.length;
   }
 
   private fadeOut(i: number, duration = 0) {
@@ -84,6 +95,14 @@ export class Queue extends Colors {
     );
   }
 
+  set nextToDequeueColor(color: string) {
+    this.cells[0].color = color;
+  }
+
+  getNextToDequeue() {
+    return this.actualArray[0];
+  }
+
   async dequeue(duration = 500) {
     const value = this.actualArray[0];
 
@@ -97,19 +116,19 @@ export class Queue extends Colors {
     return value;
   }
 
-  async enqueue(value: string, duration = 500) {
+  async enqueue(value: T, duration = 500, style?: { color: string }) {
     this.actualArray.push(value);
-    this.cells.push(
-      new Cell(
-        this.two,
-        this.xOffset + (this.cells.length + 1) * this.style.cellWidth,
-        this.yOffset,
-        this.style.cellWidth,
-        this.style.cellWidth,
-        value,
-        this.style
-      )
+    const cell = new Cell(
+      this.two,
+      this.xOffset + (this.cells.length + 2) * this.style.cellWidth,
+      this.yOffset,
+      this.style.cellWidth,
+      this.style.cellWidth,
+      this.getText(value),
+      this.style
     );
+    if (style) cell.color = style.color;
+    this.cells.push(cell);
     this.fadeOut(this.cells.length - 1, 0);
     return await Promise.all([
       this.fadeIn(this.cells.length - 1, duration * 0.9),
@@ -118,7 +137,7 @@ export class Queue extends Colors {
   }
 
   private updateCanvasSize() {
-    this.canvasWidth = (this.style.cellMaxAmount + 1) * this.style.cellWidth;
-    this.canvasHeight = this.style.cellWidth;
+    this.canvasWidth = (this.style.cellMaxAmount + 3) * this.style.cellWidth;
+    this.canvasHeight = this.style.cellWidth + 1;
   }
 }
