@@ -38,6 +38,7 @@ export class Node {
     };
 
     const circle = this.two.makeCircle(x, y, radius);
+    circle.linewidth = 2;
     const text_ = new Two.Text(text, x, y, {
       size: newStyle.textSize,
       weight: newStyle.textWeight,

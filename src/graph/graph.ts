@@ -13,7 +13,7 @@ interface Style {
   padding?: number;
 }
 
-type AllStyles = Style & NodeStyle;
+type AllStyles = Style & NodeStyle & EdgeStyle;
 type AllStylesRequired = Required<Style> & NodeStyle & EdgeStyle;
 
 export type SimpleNode = {
@@ -90,7 +90,8 @@ export class Graph extends Alvis {
           startX - unitVec.x * this.style.nodeRadius,
           startY - unitVec.y * this.style.nodeRadius,
           node.x + unitVec.x * this.style.nodeRadius,
-          node.y + unitVec.y * this.style.nodeRadius
+          node.y + unitVec.y * this.style.nodeRadius,
+          this.style
         );
       })
       .filter(Boolean) as Edge[];
@@ -131,6 +132,6 @@ export class Graph extends Alvis {
     this.canvasWidth =
       this.style.nodeRadius * 2 * (maxJ + 1) + this.style.padding * maxJ;
     this.canvasHeight =
-      this.style.nodeRadius * 2 * (maxI + 1) + this.style.padding * maxI;
+      this.style.nodeRadius * 2 * (maxI + 1) + this.style.padding * maxI + 25;
   }
 }

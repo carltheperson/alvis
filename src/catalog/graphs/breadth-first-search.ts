@@ -2,21 +2,24 @@ import { letterGraphExample } from "../../example-data/letter-graph";
 import { Graph } from "../../graph/graph";
 import { Node } from "../../graph/node";
 import { Queue } from "../../queue/queue";
-import { timeout } from "../../util";
+import { addTitle, timeout } from "../../util";
 
 /*
 O(V+E)T
 O(V)S
 */
 export const breadthFirstSearch = async () => {
+  addTitle("Breadth-first search");
+
   const style = { cellMaxAmount: 10 };
   const queue = new Queue<Node>(document.body, [], style);
 
+  const graph = new Graph(document.body, letterGraphExample, { padding: 70 });
+
+  queue.enqueue(graph.head, 500);
+  await timeout(500);
+
   const resultQueue = new Queue<Node>(document.body, [], style);
-
-  const graph = new Graph(document.body, letterGraphExample);
-  await queue.enqueue(graph.head, 500);
-
   while (queue.length !== 0) {
     const node = queue.getNextToDequeue();
 
@@ -39,7 +42,7 @@ export const breadthFirstSearch = async () => {
 
     queue.nextToDequeueColor = "lightgreen";
     node.color = "white";
-    await queue.dequeue(1000);
+    await queue.dequeue(750);
     await resultQueue.enqueue(node, 750, { color: "lightgreen" });
     await timeout(500);
   }
