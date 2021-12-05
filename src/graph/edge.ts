@@ -25,6 +25,8 @@ export class Edge {
   private line: Two.Line;
   private arrowLines: Two.Line[];
   private style: Required<EdgeStyle>;
+  private weightRec: Two.Rectangl | null = null;
+  private weightText: Two.Text | null = null;
   private two: Two;
   public node: Node;
   public weight: number;
@@ -79,21 +81,30 @@ export class Edge {
       x: x1 - unitVec.x * (length / 2),
       y: y1 - unitVec.y * (length / 2),
     };
-    const rec = this.two.makeRectangle(
+    this.weightRec = this.two.makeRectangle(
       newPoint.x,
       newPoint.y,
       this.style.weightRecWidth,
       this.style.weightRecWidth
     );
-    rec.linewidth = 2;
-    const text = new Two.Text(this.weight.toString(), newPoint.x, newPoint.y, {
-      size: this.style.weightFontSize,
-    });
-    this.two.scene.add(text);
+    this.weightRec.linewidth = 2;
+    this.weightText = new Two.Text(
+      this.weight.toString(),
+      newPoint.x,
+      newPoint.y,
+      {
+        size: this.style.weightFontSize,
+      }
+    );
+    this.two.scene.add(this.weightText);
   }
 
   set color(color: string) {
     this.line.stroke = color;
     this.arrowLines.forEach((line) => (line.stroke = color));
+    if (this.weightRec) this.weightRec.stroke = color;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (this.weightText) this.weightText.fill = color;
   }
 }

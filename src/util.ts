@@ -79,3 +79,9 @@ export const addTitle = (text: string) => {
   title.innerText = text;
   document.body.appendChild(title);
 };
+
+export const addSmallTitle = (text: string) => {
+  const title = document.createElement("h2");
+  title.innerText = text;
+  document.body.appendChild(title);
+};

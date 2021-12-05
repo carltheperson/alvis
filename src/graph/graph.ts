@@ -136,4 +136,8 @@ export class Graph extends Alvis {
     this.canvasHeight =
       this.style.nodeRadius * 2 * (maxI + 1) + this.style.padding * maxI + 25;
   }
+
+  getListOfNodes() {
+    return Object.values(this.nodesGenerated);
+  }
 }

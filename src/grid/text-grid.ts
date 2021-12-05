@@ -59,4 +59,22 @@ export class TextGrid extends Colors2D {
   setText(i: number, j: number, text: string) {
     this.cells[i][j].text = text;
   }
+
+  getText(i: number, j: number) {
+    return this.cells[i][j].text;
+  }
+
+  getAllTextValues(): string[][] {
+    return this.cells.map((cells) => cells.map((cell) => cell.text));
+  }
+
+  updateText(oldText: string, newText: string) {
+    this.cells.forEach((cells) =>
+      cells.forEach((cell) => {
+        if (cell.text === oldText) {
+          cell.text = newText;
+        }
+      })
+    );
+  }
 }

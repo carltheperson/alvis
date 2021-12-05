@@ -62,8 +62,16 @@ export class Alvis {
     }
   }
 
+  get canvasWidth() {
+    return this.two.width;
+  }
+
   set canvasWidth(width: number) {
     this.two.width = width + 1.5;
+  }
+
+  get canvasHeight() {
+    return this.two.height;
   }
 
   set canvasHeight(height: number) {

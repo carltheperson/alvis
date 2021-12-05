@@ -65,6 +65,10 @@ export class Cell {
     this.rectangle.text.value = text;
   }
 
+  get text() {
+    return this.rectangle.text.value;
+  }
+
   set color(color: string) {
     this.rectangle.fill = color;
   }
