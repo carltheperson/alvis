@@ -1,42 +1,29 @@
 import { Alvis } from "../alvis";
 import { timeout } from "../util";
-import { Colors } from "./colors";
 
 interface Entity {
   color: string;
 }
 
 export class Colors2D extends Alvis {
-  private allEntities: Entity[][] = [];
-  private colors: Colors[] = [];
+  entities: Entity[][] = [];
 
   constructor(element: HTMLElement) {
     super(element);
   }
 
-  set entities(entities: Entity[][]) {
-    this.allEntities = entities;
-    this.colors = this.allEntities.map((entities) => {
-      const colors = new Colors(this.htmlElement);
-      colors.entities = entities;
-      colors.canvasWidth = 0;
-      colors.canvasHeight = 0;
-      return colors;
-    });
-  }
-
   changeColor(i: number, j: number, color: string, duration = 0) {
-    return this.colors[i].changeColor(j, color, duration);
+    this.entities[i][j].color = color;
+    return timeout(duration);
   }
 
   changeColorForRow(i: number, color: string, duration = 0) {
-    return this.colors[i].changeAllColors(color, duration);
+    this.entities[i].forEach((entity) => (entity.color = color));
+    return timeout(duration);
   }
 
-  async changeColorForColumn(j: number, color: string, duration = 0) {
-    this.colors.forEach((colors) => {
-      colors.changeColor(j, color);
-    });
-    await timeout(duration);
+  changeColorForColumn(j: number, color: string, duration = 0) {
+    this.entities.forEach((entity) => (entity[j].color = color));
+    return timeout(duration);
   }
 }
