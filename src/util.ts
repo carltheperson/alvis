@@ -65,19 +65,13 @@ export const rotate = (
   return { x: nx, y: ny };
 };
 
-// Thanks! https://stackoverflow.com/a/57401891/8489048
-export const adjustColor = (color: string, amount: number) => {
-  return (
-    "#" +
-    color
-      .replace(/^#/, "")
-      .replace(/../g, (color) =>
-        (
-          "0" +
-          Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)
-        ).substr(-2)
-      )
-  );
+export const getDistanceBetweenPoints = (
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) => {
+  return Math.hypot(x2 - x1, y2 - y1);
 };
 
 export const addTitle = (text: string) => {

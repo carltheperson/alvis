@@ -52,8 +52,8 @@ export class TextGrid extends Colors2D {
   }
 
   private updateCanvasSize() {
-    this.canvasWidth = this.style.cellWidth * this.cells[0].length;
-    this.canvasHeight = this.style.cellHeight * this.cells.length;
+    this.canvasWidth = this.style.cellWidth * this.cells[0].length + 1;
+    this.canvasHeight = this.style.cellHeight * this.cells.length + 1;
   }
 
   setText(i: number, j: number, text: string) {

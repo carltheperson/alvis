@@ -24,6 +24,7 @@ export type SimpleNode = {
 
 export type SimpleEdge = {
   node: SimpleNode;
+  weight?: number;
 };
 
 export class Graph extends Alvis {
@@ -91,7 +92,8 @@ export class Graph extends Alvis {
           startY - unitVec.y * this.style.nodeRadius,
           node.x + unitVec.x * this.style.nodeRadius,
           node.y + unitVec.y * this.style.nodeRadius,
-          this.style
+          this.style,
+          simpleEdge.weight
         );
       })
       .filter(Boolean) as Edge[];
