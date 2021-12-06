@@ -116,22 +116,16 @@ export class Queue<T extends { text: string } | string> extends Colors {
     return value;
   }
 
-  async remove(i: number) {
-    console.log(
-      this.cells.slice(i, this.actualArray.length).map((el, i_) => i_ + i)
-    );
-
-    await this.fadeOut(i, 500);
-    await Promise.all(
-      this.cells
+  async remove(i: number, duration = 1000) {
+    await Promise.all([
+      this.fadeOut(i, (duration + 1) / 2),
+      ...this.cells
         .slice(i, this.actualArray.length)
-        .map((_, i_) => this.moveLeftOneBlock(i_ + i, 1000))
-    );
+        .map((_, i_) => this.moveLeftOneBlock(i_ + i, duration)),
+    ]);
 
-    this.actualArray = this.actualArray.filter(
-      (value) => value !== this.actualArray[i]
-    );
-    this.cells = this.cells.filter((value) => value !== this.cells[i]);
+    this.actualArray.splice(i, 1);
+    this.cells.splice(i, 1);
   }
 
   async enqueue(value: T, duration = 500, style?: { color: string }) {

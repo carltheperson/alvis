@@ -22,7 +22,9 @@ export const dijkstrasAlgorithm = async () => {
     weightFontSize: 18,
     weightRecWidth: 30,
     textSize: 22,
+    lineWidth: 3.5,
   });
+  const tailValue = weightedLetterExample.tail.text;
 
   const values = [
     ["Node", "Distance", "Parent"],
@@ -37,31 +39,32 @@ export const dijkstrasAlgorithm = async () => {
   const container2 = document.createElement("div");
   container.appendChild(container2);
   const grid = new TextGrid(container2, values);
-  grid.changeColorForColumn(0, "ivory");
   grid.changeColorForRow(0, "lightgrey");
 
   addSmallTitle("Unvisited");
   const unvisitedQueue = new Queue<{ text: string }>(
     document.body,
-    allNodesWeightedLetterExample,
+    allNodesWeightedLetterExample.filter((el) => el.text != "F"),
     {
       cellMaxAmount: 5,
     }
   );
 
-  addSmallTitle("Visited");
-  const visitedQueue = new Queue<{ text: string }>(document.body, [], {
-    cellMaxAmount: 5,
-  });
+  // addSmallTitle("Visited");
+  // const visitedQueue = new Queue<{ text: string }>(document.body, [], {
+  //   cellMaxAmount: 5,
+  // });
 
   const textField = new TextField(container2, grid.canvasWidth);
 
   // Start
   let node = graph.head;
-  while (node.text !== "F") {
+  unvisitedQueue.changeColor(0, "lightgreen");
+  node.color = "lightgreen";
+  node.allEdgeColors = "darkorange";
+  while (unvisitedQueue.length !== 0) {
     // changeColorInQueueBasedOnText(unvisitedQueue, node.text, "lightgreen");
 
-    node.allEdgeColors = "darkorange";
     for (const edge of node.edges) {
       edge.node.color = "yellow";
       const row = getRowValueFromNodeText(edge.node.text, grid);
@@ -74,7 +77,7 @@ export const dijkstrasAlgorithm = async () => {
       textField.color = "darkorange";
       await timeout(500);
       if (result > parseInt(currentValue)) {
-        textField.text = `${parentValue} + ${edgeValue} = ${result} is not less than ${currentValue}`;
+        textField.text = `${parentValue} + ${edgeValue} = ${result} is NOT less than ${currentValue}`;
       } else {
         textField.text = `${parentValue} + ${edgeValue} = ${result} is less than ${currentValue}`;
         grid.setText(row, 1, `${parentValue} + ${edgeValue} = ${result}`);
@@ -82,41 +85,50 @@ export const dijkstrasAlgorithm = async () => {
         grid.setText(row, 1, result.toString());
         await timeout(2000);
         grid.setText(row, 2, node.text);
+        grid.changeColor(row, 2, "lightgreen");
       }
 
       await timeout(2000);
       grid.changeColor(row, 1, "white");
       grid.changeColor(row, 2, "white");
       edge.node.color = "white";
-      edge.color = "black";
       textField.text = "";
       await timeout(500);
     }
     node.color = "white";
+    node.allEdgeColors = "black";
     await unvisitedQueue.remove(
       findIndexInQueueBasedOnText(unvisitedQueue, node.text)
     );
-    visitedQueue.enqueue(node);
-    visitedQueue.changeAllColors("lightGreen");
+    // visitedQueue.enqueue(node);
+    // visitedQueue.changeAllColors("lightGreen");
 
-    node = getUnvisitedNodeWithSmallestDistance(
-      graph.getListOfNodes(),
-      visitedQueue,
-      grid
-    );
-    if (node.text === "F") {
-      textField.text = `The unvisited node with the smallest distance is the final node. Stopping now`;
+    if (unvisitedQueue.length === 0) {
       break;
     }
 
+    node = getUnvisitedNodeWithSmallestDistance(
+      graph.getListOfNodes(),
+      unvisitedQueue,
+      grid
+    );
     textField.text = `${node.text} is now the unvisited node with the smallest distance`;
     textField.color = "green";
     node.color = "lightgreen";
+    node.allEdgeColors = "darkorange";
+    changeColorInQueueBasedOnText(unvisitedQueue, node.text, "lightgreen");
     const newNodeRow = getRowValueFromNodeText(node.text, grid);
-    grid.changeColorForRow(newNodeRow, "lightgreen");
+    grid.changeColorForRow(newNodeRow, "rgb(185, 253, 185)");
     await timeout(3000);
     grid.changeColorForRow(newNodeRow, "white");
   }
+
+  lightUpFinalPath(
+    graph,
+    grid,
+    allNodesWeightedLetterExample.map((n) => n.text),
+    tailValue
+  );
 };
 
 const getRowValueFromNodeText = (text: string, grid: TextGrid) => {
@@ -127,7 +139,7 @@ const getRowValueFromNodeText = (text: string, grid: TextGrid) => {
 
 const getUnvisitedNodeWithSmallestDistance = (
   nodes: Node[],
-  visitedQueue: Queue<{ text: string }>,
+  unvisitedQueue: Queue<{ text: string }>,
   grid: TextGrid
 ) => {
   const textValues = grid.getAllTextValues();
@@ -135,9 +147,11 @@ const getUnvisitedNodeWithSmallestDistance = (
   const sortedValues = textValues.sort((row1, row2) => {
     return parseInt(row1[1]) - parseInt(row2[1]);
   });
-  const visitedValues = visitedQueue.actualArray.map((element) => element.text);
-  const sortedUnvisitedValues = sortedValues.filter(
-    (value) => !visitedValues.includes(value[0])
+  const unvisitedValues = unvisitedQueue.actualArray.map(
+    (element) => element.text
+  );
+  const sortedUnvisitedValues = sortedValues.filter((value) =>
+    unvisitedValues.includes(value[0])
   );
   const value = sortedUnvisitedValues[0][0];
   const node = nodes.find((node) => node.text === value);
@@ -159,4 +173,31 @@ const changeColorInQueueBasedOnText = (
 ) => {
   const index = findIndexInQueueBasedOnText(queue, text);
   queue.changeColor(index, color, 0);
+};
+
+const lightUpFinalPath = async (
+  graph: Graph,
+  grid: TextGrid,
+  allNodeLetters: string[],
+  finalNodeValue: string
+) => {
+  const nodes = graph.getListOfNodes();
+  let node = nodes.find((node) => finalNodeValue === node.text);
+  const gridValues = grid.getAllTextValues();
+  while (node) {
+    node.color = "dodgerBlue";
+    const rowIndex = allNodeLetters.indexOf(node.text) + 1;
+    const rowValues = gridValues[rowIndex];
+    const parentValue = rowValues[2];
+    grid.changeColor(rowIndex, 0, "dodgerBlue");
+    const oldNode = node;
+    node = nodes.find((node) => parentValue === node.text);
+    if (node) {
+      const connectingEdge = node.edges.find((edge) => edge.node === oldNode)!;
+      await timeout(1000);
+      grid.changeColor(rowIndex, 2, "DeepSkyBlue");
+      connectingEdge.color = "blue";
+    }
+    await timeout(1500);
+  }
 };

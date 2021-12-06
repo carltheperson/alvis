@@ -48,16 +48,16 @@ const jonny: SimpleNode = {
   edges: [],
 };
 
-you.edges.push({ node: bob });
-you.edges.push({ node: alice });
+you.edges.push({ node: bob, weight: 5 });
+you.edges.push({ node: alice, weight: 7 });
 you.edges.push({ node: clare });
 
-bob.edges.push({ node: anuj });
+bob.edges.push({ node: anuj, weight: 2 });
 
 clare.edges.push({ node: thom });
 clare.edges.push({ node: jonny });
 
-bob.edges.push({ node: peggy });
+bob.edges.push({ node: peggy, weight: 10 });
 alice.edges.push({ node: peggy });
 
 export { you as grokkingAlgoBFSExample };

@@ -1,5 +1,6 @@
 import { breadthFirstSearch } from "./catalog/graphs/breadth-first-search";
 import { depthFirstSearch } from "./catalog/graphs/depth-first-search";
+import { dijkstrasAlgorithm } from "./catalog/graphs/dijkstras-algorithm";
 import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
@@ -15,4 +16,26 @@ import { timeout } from "./util";
 // insertionSort();
 // selectionSort();
 // breadthFirstSearch();
-depthFirstSearch();
+// await timeout(500);
+// depthFirstSearch();
+dijkstrasAlgorithm();
+
+// const values = [
+//   ["a", "b", "c", "d", "c", "d"],
+//   ["a", "b", "c", "d", "c", "d"],
+//   ["a", "b", "c", "d", "c", "d"],
+//   ["a", "b", "c", "d", "c", "d"],
+// ];
+
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);
+// new TextGrid(document.body, values);

@@ -44,7 +44,13 @@ e.edges.push({ node: f, weight: 1 });
 
 const allNodes = [a, b, c, d, e, f];
 
+const allData = {
+  ...a,
+  allNodes,
+  tail: f,
+};
+
 export {
-  a as weightedLetterExample,
+  allData as weightedLetterExample,
   allNodes as allNodesWeightedLetterExample,
 };
