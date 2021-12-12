@@ -38,12 +38,12 @@ export class Colors extends Alvis {
     endI: number,
     color: string,
     duration = 0
-  ): void {
+  ) {
     const indexes = new Array(this.allEntities.length)
       .fill(0)
       .map((_, i) => i)
       .filter((i) => i >= startI && i <= endI);
-    this.changeColors(indexes, color, duration);
+    return this.changeColors(indexes, color, duration);
   }
 
   changeAllColors(color: string, duration = 0): Promise<void> {

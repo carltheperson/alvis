@@ -33,29 +33,14 @@ export class Array1D extends Colors {
       cellWidth: style.cellWidth ?? Default.CELL_WIDTH,
     };
 
+    this.yOffset = this.style.cellWidth / 2 + 1;
+    this.xOffset = this.style.cellWidth / 2 + 1;
+
     this.actualArray = values;
-    this.updateOffsets(values.length);
     this.cells = this.generateCells(values);
     super.entities = this.cells;
 
-    super.bindResizeCallback(() => {
-      this.updateOffsets(this.cells.length);
-    });
-  }
-
-  private updateOffsets(cellAmount: number) {
-    const lastXOffset = this.xOffset;
-    const lastYOffset = this.yOffset;
-    this.xOffset = calculateXOffset(
-      cellAmount,
-      this.style.cellWidth,
-      this.two.width
-    );
-    this.yOffset = calculateYOffset(this.style.cellWidth, this.two.height);
-    this.cells.forEach((cell) => {
-      cell.x += this.xOffset - lastXOffset;
-      cell.y += this.yOffset - lastYOffset;
-    });
+    this.updateCanvasSize();
   }
 
   private generateCells(values: string[] | number[]): Cell[] {
@@ -86,5 +71,10 @@ export class Array1D extends Colors {
       getEventPromise: super.getEventPromise.bind(this),
       getXOffset: () => this.xOffset,
     });
+  }
+
+  private updateCanvasSize() {
+    this.canvasWidth = this.style.cellWidth * this.actualArray.length + 1;
+    this.canvasHeight = this.style.cellWidth + 1;
   }
 }
