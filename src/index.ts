@@ -2,6 +2,7 @@ import { breadthFirstSearch } from "./catalog/graphs/breadth-first-search";
 import { depthFirstSearch } from "./catalog/graphs/depth-first-search";
 import { dijkstrasAlgorithm } from "./catalog/graphs/dijkstras-algorithm";
 import { maxSumFixedSubarray } from "./catalog/sliding-window/max-sum-fixed-subarray";
+import { smallestSubArrayWithCondition } from "./catalog/sliding-window/smallest-subarray-with-condition";
 import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
@@ -20,7 +21,8 @@ import { timeout } from "./util";
 // await timeout(500);
 // depthFirstSearch();
 // dijkstrasAlgorithm();
-maxSumFixedSubarray();
+// maxSumFixedSubarray();
+smallestSubArrayWithCondition();
 
 // const values = [
 //   ["a", "b", "c", "d", "c", "d"],
