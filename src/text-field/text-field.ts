@@ -7,7 +7,7 @@ export class TextField {
     parentHtmlElement.appendChild(div);
     this.textElement = document.createElement("p");
     this.textElement.style.fontWeight = "700";
-    div.style.minHeight = "40px";
+    div.style.minHeight = "50px";
     div.appendChild(this.textElement);
     div.style.width = width + "px";
   }

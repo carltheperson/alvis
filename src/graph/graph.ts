@@ -132,7 +132,7 @@ export class Graph extends Alvis {
     const maxI = this.getLargestGridPosition(simpleHead, "i");
     const maxJ = this.getLargestGridPosition(simpleHead, "j");
     this.canvasWidth =
-      this.style.nodeRadius * 2 * (maxJ + 1) + this.style.padding * maxJ;
+      this.style.nodeRadius * 2 * (maxJ + 1) + this.style.padding * maxJ + 5;
     this.canvasHeight =
       this.style.nodeRadius * 2 * (maxI + 1) + this.style.padding * maxI + 25;
   }
