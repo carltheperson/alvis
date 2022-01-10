@@ -25,13 +25,12 @@ export const maxSumFixedSubarray = async () => {
   setMaxValue(maxValue);
 
   for (let i = 0; i < array.length - (SUBARRAY_LENGTH - 1); i++) {
-    await alvis.changeColorsInRange(i, i + 2, "yellow", 500);
     let sum = 0;
     for (let j = i; j < i + SUBARRAY_LENGTH; j++) {
       sum += array[j];
     }
     setCurrentRunningSum(sum);
-    await timeout(750);
+    await alvis.changeColorsInRange(i, i + 2, "yellow", 500);
     if (sum > maxValue) {
       setMaxValue(sum);
       maxValueTextField.color = "green";
@@ -40,7 +39,7 @@ export const maxSumFixedSubarray = async () => {
       currentRunningSumTextField.color = "red";
       await alvis.changeColorsInRange(i, i + 2, "Tomato", 500);
     }
-    await timeout(500);
+    await timeout(1200);
     alvis.changeAllColors("white", 0);
     maxValueTextField.color = "black";
     currentRunningSumTextField.color = "black";
