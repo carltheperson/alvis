@@ -38,6 +38,7 @@ const f: SimpleNode = {
 
 a.edges.push({ node: b, weight: 5 }, { node: c, weight: 2 });
 b.edges.push({ node: d, weight: 4 }, { node: e, weight: 2 });
+b.edges.push({ node: c, weight: 1 }, { node: e, weight: 2 });
 c.edges.push({ node: e, weight: 7 });
 d.edges.push({ node: e, weight: 6 }, { node: f, weight: 3 });
 e.edges.push({ node: f, weight: 1 });
@@ -50,7 +51,4 @@ const allData = {
   tail: f,
 };
 
-export {
-  allData as weightedLetterExample,
-  allNodes as allNodesWeightedLetterExample,
-};
+export { allData as weightedLetterExample };
