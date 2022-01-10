@@ -2,16 +2,18 @@ import { letterGraphExample } from "../../example-data/letter-graph";
 import { Graph } from "../../graph/graph";
 import { Queue } from "../../queue/queue";
 import { Node } from "../../graph/node";
-import { addTitle, timeout } from "../../util";
+import { timeout } from "../../util";
 
 export const depthFirstSearch = async () => {
-  addTitle("Depth-first search");
-
   const graph = new Graph(document.body, letterGraphExample, {
+    textSize: 20,
     padding: 70,
-    lineWidth: 4.5,
+    lineWidth: 4,
   });
-  const resultQueue = new Queue<Node>(document.body, [], { cellMaxAmount: 10 });
+  const resultQueue = new Queue<Node>(document.body, [], {
+    cellMaxAmount: 10,
+    textSize: 20,
+  });
 
   const traverse = async (node: Node) => {
     node.color = "lightGreen";

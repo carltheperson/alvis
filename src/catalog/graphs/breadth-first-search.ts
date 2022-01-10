@@ -1,20 +1,24 @@
-import { letterGraphExample } from "../../example-data/letter-graph";
+import { BFSExample } from "../../example-data/bfs-example";
 import { Graph } from "../../graph/graph";
 import { Node } from "../../graph/node";
 import { Queue } from "../../queue/queue";
-import { addTitle, timeout } from "../../util";
+import { timeout } from "../../util";
 
 /*
 O(V+E)T
 O(V)S
 */
 export const breadthFirstSearch = async () => {
-  addTitle("Breadth-first search");
-
-  const style = { cellMaxAmount: 10 };
+  const style = { cellMaxAmount: 10, textSize: 20 };
   const queue = new Queue<Node>(document.body, [], style);
 
-  const graph = new Graph(document.body, letterGraphExample, { padding: 70 });
+  const graph = new Graph(document.body, BFSExample, {
+    padding: 70,
+    lineWidth: 4,
+    textSize: 20,
+  });
+
+  const visited: Record<string, boolean> = {};
 
   queue.enqueue(graph.head, 500);
   await timeout(500);
@@ -28,20 +32,23 @@ export const breadthFirstSearch = async () => {
 
     node.allEdgeColors = "darkBlue";
 
-    if (node.edges.length > 0) await timeout(500);
-    for (const edge of node.edges) {
+    if (node.edges.length > 0) await timeout(250);
+
+    const edges = node.edges.filter((n) => !visited[n.node.text]);
+    for (const edge of edges) {
       edge.node.color = "yellow";
-      queue.enqueue(edge.node, 1200, { color: "yellow" });
+      queue.enqueue(edge.node, 750, { color: "yellow" });
+      visited[edge.node.text] = true;
     }
 
-    if (node.edges.length > 0) {
+    if (edges.length > 0) {
       await timeout(1600);
-    } else await timeout(1000);
+    } else await timeout(500);
 
     node.allEdgeColors = "black";
 
     queue.nextToDequeueColor = "lightgreen";
-    node.color = "white";
+    node.color = "lightgreen";
     await queue.dequeue(750);
     await resultQueue.enqueue(node, 750, { color: "lightgreen" });
     await timeout(500);

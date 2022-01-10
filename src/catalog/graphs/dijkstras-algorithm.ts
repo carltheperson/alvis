@@ -1,133 +1,178 @@
-import { grokkingAlgoBFSExample } from "../../example-data/grokking-graph";
-import {
-  allNodesWeightedLetterExample,
-  weightedLetterExample,
-} from "../../example-data/weighted-letter-graph";
+import { weightedLetterExample } from "../../example-data/weighted-letter-graph";
 import { Graph } from "../../graph/graph";
 import { Node } from "../../graph/node";
 import { TextGrid } from "../../grid/text-grid";
 import { Queue } from "../../queue/queue";
 import { TextField } from "../../text-field/text-field";
-import { addSmallTitle, addTitle, timeout } from "../../util";
+import { addSmallTitle, timeout } from "../../util";
+
+const GRAPH = weightedLetterExample;
+const GRAPH_NODES = GRAPH.allNodes;
+
+enum Color {
+  SELECTED_NODE = "dodgerBlue",
+  SELECTED_TEXT = "darkBlue",
+  SOMETHING_NOT_POSSIBLE = "grey",
+  SOMETHING_BAD = "red",
+  HIGHLIGHTED_NODE = "yellow",
+  HIGHLIGHTED_EDGE = "darkorange",
+  NORMAL_EDGE = "black",
+  CLOSED_NODE = "lightgreen",
+  BLANK = "white",
+  HEADER = "lightgrey",
+}
+
+const HEADER_VALUES = ["Node", "Distance", "Parent"];
+
+enum HeaderIndex {
+  NODE = 0,
+  DISTANCE = 1,
+  PARENT = 2,
+}
+
+const QUEUE_STYLE = { cellMaxAmount: 5 };
+
+const GRAPH_STYLE = {
+  weightFontSize: 18,
+  weightRecWidth: 30,
+  textSize: 22,
+  lineWidth: 3.5,
+};
 
 export const dijkstrasAlgorithm = async () => {
-  addTitle("Dijkstra's Algorithm");
   const container = document.createElement("div");
   container.style.display = "flex";
   container.style.alignItems = "baseline";
   container.style.gap = "20px";
   document.body.appendChild(container);
 
-  const graph = new Graph(container, weightedLetterExample, {
-    weightFontSize: 18,
-    weightRecWidth: 30,
-    textSize: 22,
-    lineWidth: 3.5,
-  });
-  const tailValue = weightedLetterExample.tail.text;
+  const graph = new Graph(container, GRAPH, GRAPH_STYLE);
 
   const values = [
-    ["Node", "Distance", "Parent"],
-    ...allNodesWeightedLetterExample.map((nodeText) => [
-      nodeText.text,
-      "∞",
-      "",
-    ]),
+    HEADER_VALUES,
+    ...GRAPH_NODES.map((nodeText) => [nodeText.text, "∞", ""]),
   ];
-  values[1][1] = "0";
+  values[HeaderIndex.DISTANCE][1] = "0";
 
   const container2 = document.createElement("div");
   container.appendChild(container2);
   const grid = new TextGrid(container2, values);
   grid.changeColorForRow(0, "lightgrey");
 
-  addSmallTitle("Unvisited");
-  const unvisitedQueue = new Queue<{ text: string }>(
+  addSmallTitle("Open");
+  const openQueue = new Queue<{ text: string }>(
     document.body,
-    allNodesWeightedLetterExample.filter((el) => el.text != "F"),
-    {
-      cellMaxAmount: 5,
-    }
+    GRAPH_NODES.filter((el) => el.text != GRAPH.tail.text),
+    QUEUE_STYLE
   );
 
-  // addSmallTitle("Visited");
-  // const visitedQueue = new Queue<{ text: string }>(document.body, [], {
-  //   cellMaxAmount: 5,
-  // });
+  addSmallTitle("Closed");
+  const closedQueue = new Queue<{ text: string }>(
+    document.body,
+    [],
+    QUEUE_STYLE
+  );
 
   const textField = new TextField(container2, grid.canvasWidth);
 
-  // Start
   let node = graph.head;
-  unvisitedQueue.changeColor(0, "lightgreen");
-  node.color = "lightgreen";
-  node.allEdgeColors = "darkorange";
-  while (unvisitedQueue.length !== 0) {
-    // changeColorInQueueBasedOnText(unvisitedQueue, node.text, "lightgreen");
+  openQueue.changeColor(0, Color.SELECTED_NODE);
+  grid.changeColorForRow(1, Color.SELECTED_NODE);
+  node.color = Color.SELECTED_NODE;
+  await timeout(1500);
 
-    for (const edge of node.edges) {
-      edge.node.color = "yellow";
+  while (openQueue.length !== 0) {
+    const edgesLeadingToOpenNodes = node.edges.filter(
+      (edge) =>
+        findIndexInQueueBasedOnText(openQueue, edge.node.text) !== -1 ||
+        edge.node.text === GRAPH.tail.text
+    );
+    edgesLeadingToOpenNodes.forEach(
+      (edge) => (edge.color = Color.HIGHLIGHTED_EDGE)
+    );
+    node.edges
+      .filter((edge) => !edgesLeadingToOpenNodes.includes(edge))
+      .forEach((edge) => (edge.color = Color.SOMETHING_NOT_POSSIBLE));
+
+    await timeout(1500);
+    for (const edge of edgesLeadingToOpenNodes) {
+      const oldColor = edge.node.color;
+
+      edge.node.color = Color.HIGHLIGHTED_NODE;
       const row = getRowValueFromNodeText(edge.node.text, grid);
-      grid.changeColor(row, 1, "yellow");
+      grid.changeColorForRow(row, Color.HIGHLIGHTED_NODE);
       const parentNodeRow = getRowValueFromNodeText(node.text, grid);
-      const parentValue = parseInt(grid.getText(parentNodeRow, 1));
+      const parentValue = parseInt(
+        grid.getText(parentNodeRow, HeaderIndex.DISTANCE)
+      );
       const edgeValue = edge.weight;
       const result = parentValue + edgeValue;
-      const currentValue = grid.getText(row, 1);
-      textField.color = "darkorange";
+      const currentValue = grid.getText(row, HeaderIndex.DISTANCE);
       await timeout(500);
+
       if (result > parseInt(currentValue)) {
+        textField.color = Color.SOMETHING_BAD;
         textField.text = `${parentValue} + ${edgeValue} = ${result} is NOT less than ${currentValue}`;
       } else {
+        textField.color = Color.HIGHLIGHTED_EDGE;
         textField.text = `${parentValue} + ${edgeValue} = ${result} is less than ${currentValue}`;
-        grid.setText(row, 1, `${parentValue} + ${edgeValue} = ${result}`);
+        grid.setText(
+          row,
+          HeaderIndex.DISTANCE,
+          `${parentValue} + ${edgeValue} = ${result}`
+        );
         await timeout(1500);
-        grid.setText(row, 1, result.toString());
+        grid.setText(row, HeaderIndex.DISTANCE, result.toString());
         await timeout(2000);
-        grid.setText(row, 2, node.text);
-        grid.changeColor(row, 2, "lightgreen");
+        grid.setText(row, HeaderIndex.PARENT, node.text);
+
+        edge.node.color = oldColor;
       }
 
       await timeout(2000);
-      grid.changeColor(row, 1, "white");
-      grid.changeColor(row, 2, "white");
-      edge.node.color = "white";
+      grid.changeColorForRow(row, Color.BLANK);
       textField.text = "";
       await timeout(500);
     }
-    node.color = "white";
-    node.allEdgeColors = "black";
-    await unvisitedQueue.remove(
-      findIndexInQueueBasedOnText(unvisitedQueue, node.text)
+    node.color = Color.CLOSED_NODE;
+    node.allEdgeColors = Color.NORMAL_EDGE;
+    await openQueue.remove(findIndexInQueueBasedOnText(openQueue, node.text));
+    closedQueue.enqueue(node);
+    closedQueue.changeAllColors(Color.CLOSED_NODE);
+    grid.changeColorForRow(
+      getRowValueFromNodeText(node.text, grid),
+      Color.CLOSED_NODE
     );
-    // visitedQueue.enqueue(node);
-    // visitedQueue.changeAllColors("lightGreen");
 
-    if (unvisitedQueue.length === 0) {
+    await timeout(1250);
+
+    if (openQueue.length === 0) {
       break;
     }
 
+    // Picking new node
     node = getUnvisitedNodeWithSmallestDistance(
       graph.getListOfNodes(),
-      unvisitedQueue,
+      openQueue,
       grid
     );
-    textField.text = `${node.text} is now the unvisited node with the smallest distance`;
-    textField.color = "green";
-    node.color = "lightgreen";
-    node.allEdgeColors = "darkorange";
-    changeColorInQueueBasedOnText(unvisitedQueue, node.text, "lightgreen");
+    textField.text = `${node.text} is now the open node with the smallest distance`;
+    textField.color = Color.SELECTED_TEXT;
+    node.color = Color.SELECTED_NODE;
+    changeColorInQueueBasedOnText(openQueue, node.text, Color.SELECTED_NODE);
     const newNodeRow = getRowValueFromNodeText(node.text, grid);
-    grid.changeColorForRow(newNodeRow, "rgb(185, 253, 185)");
     await timeout(3000);
-    grid.changeColorForRow(newNodeRow, "white");
+    grid.changeColorForRow(newNodeRow, Color.SELECTED_NODE);
   }
+  graph.getListOfNodes().find((node) => node.text === GRAPH.tail.text)!.color =
+    Color.CLOSED_NODE;
+  await timeout(3000);
 
   lightUpFinalPath(
     graph,
     grid,
-    allNodesWeightedLetterExample.map((n) => n.text),
-    tailValue
+    GRAPH_NODES.map((n) => n.text),
+    GRAPH.tail.text
   );
 };
 
