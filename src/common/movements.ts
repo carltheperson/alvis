@@ -131,4 +131,29 @@ export class Movements {
       lastMs = ms;
     });
   }
+
+  public static moveRight(
+    entity: Entity,
+    amount: number,
+    duration: number,
+    getEventPromise: (callback: EventCallBack) => Promise<void>
+  ) {
+    const firstX = entity.x;
+    let lastMs = 0;
+    const endX = firstX + amount;
+    const lengthBetween = Math.abs(firstX - endX);
+    return getEventPromise((ms, next) => {
+      const lengthPrMs = lengthBetween / duration;
+      const diffMs = Math.abs(lastMs - ms);
+      const travel = diffMs * lengthPrMs;
+      entity.x += travel;
+
+      if (ms > duration) {
+        entity.x = endX;
+        next();
+      }
+
+      lastMs = ms;
+    });
+  }
 }
