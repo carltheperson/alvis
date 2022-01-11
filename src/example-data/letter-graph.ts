@@ -1,7 +1,7 @@
 import { SimpleNode } from "../graph/graph";
 
 const a: SimpleNode = {
-  gridPosition: { i: 0, j: 2 },
+  gridPosition: { i: 1, j: 2 },
   text: "A",
   edges: [],
 };
@@ -13,7 +13,7 @@ const b: SimpleNode = {
 };
 
 const c: SimpleNode = {
-  gridPosition: { i: 1, j: 2 },
+  gridPosition: { i: 2, j: 2 },
   text: "C",
   edges: [],
 };
@@ -25,7 +25,7 @@ const d: SimpleNode = {
 };
 
 const e: SimpleNode = {
-  gridPosition: { i: 2, j: 0 },
+  gridPosition: { i: 0, j: 1 },
   text: "E",
   edges: [],
 };
@@ -70,14 +70,18 @@ a.edges.push({ node: b });
 a.edges.push({ node: c });
 a.edges.push({ node: d });
 
-b.edges.push({ node: e });
 b.edges.push({ node: f });
+b.edges.push({ node: e });
 
 d.edges.push({ node: g });
 d.edges.push({ node: h });
 
 f.edges.push({ node: i });
 f.edges.push({ node: j });
+
+c.edges.push({ node: g });
+
+j.edges.push({ node: k });
 
 g.edges.push({ node: k });
 
