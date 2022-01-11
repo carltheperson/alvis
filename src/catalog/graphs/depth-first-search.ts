@@ -4,13 +4,13 @@ import { Queue } from "../../queue/queue";
 import { Node } from "../../graph/node";
 import { timeout } from "../../util";
 
-export const depthFirstSearch = async () => {
-  const graph = new Graph(document.body, letterGraphExample, {
+export const depthFirstSearch = async (container: HTMLDivElement) => {
+  const graph = new Graph(container, letterGraphExample, {
     textSize: 20,
     padding: 70,
     lineWidth: 4,
   });
-  const resultQueue = new Queue<Node>(document.body, [], {
+  const resultQueue = new Queue<Node>(container, [], {
     cellMaxAmount: 10,
     textSize: 20,
   });

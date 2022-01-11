@@ -6,40 +6,44 @@ import { smallestSubArrayWithCondition } from "./catalog/sliding-window/smallest
 import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
-import { grokkingAlgoBFSExample } from "./example-data/grokking-graph";
-import { letterGraphExample } from "./example-data/letter-graph";
-import { Graph, SimpleEdge, SimpleNode } from "./graph/graph";
-import { Node } from "./graph/node";
-import { TextGrid } from "./grid/text-grid";
-import { Queue } from "./queue/queue";
-import { timeout } from "./util";
 
-// bubbleSort();
-// insertionSort();
-// selectionSort();
-// breadthFirstSearch();
-// await timeout(500);
-// depthFirstSearch();
-// dijkstrasAlgorithm();
-// maxSumFixedSubarray();
-smallestSubArrayWithCondition();
+const SELECT_TITLE = "Select algorithm";
 
-// const values = [
-//   ["a", "b", "c", "d", "c", "d"],
-//   ["a", "b", "c", "d", "c", "d"],
-//   ["a", "b", "c", "d", "c", "d"],
-//   ["a", "b", "c", "d", "c", "d"],
-// ];
+const algorithms: Record<string, (c: HTMLDivElement) => any> = {
+  "Select algorithm": () => null,
+  "Bubble Sort": bubbleSort,
+  "Intersection Sort": insertionSort,
+  "Selection Sort": selectionSort,
+  "Breadth First Search": breadthFirstSearch,
+  "Depth First Search": depthFirstSearch,
+  "Dijkstra's Algorithm": dijkstrasAlgorithm,
+  "Max sum of fixed-size subarray": maxSumFixedSubarray,
+  "Smallest subarray meeting condition": smallestSubArrayWithCondition,
+};
 
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
-// new TextGrid(document.body, values);
+const select = document.createElement("select");
+Object.keys(algorithms).forEach((key) => {
+  const option = document.createElement("option");
+  option.text = key;
+  option.value = key;
+  select.appendChild(option);
+});
+
+document.body.appendChild(select);
+
+const container = document.createElement("div");
+document.body.appendChild(container);
+
+const current = localStorage.getItem("select");
+if (current) {
+  select.selectedIndex = Object.keys(algorithms).indexOf(current);
+  algorithms[current](container);
+}
+
+select.addEventListener("change", (event) => {
+  const value = (event.target as any).value;
+  container.innerHTML = "";
+  if (value === SELECT_TITLE) return;
+  algorithms[value](container);
+  localStorage.setItem("select", value);
+});

@@ -8,11 +8,11 @@ import { timeout } from "../../util";
 O(V+E)T
 O(V)S
 */
-export const breadthFirstSearch = async () => {
+export const breadthFirstSearch = async (container: HTMLDivElement) => {
   const style = { cellMaxAmount: 10, textSize: 20 };
-  const queue = new Queue<Node>(document.body, [], style);
+  const queue = new Queue<Node>(container, [], style);
 
-  const graph = new Graph(document.body, BFSExample, {
+  const graph = new Graph(container, BFSExample, {
     padding: 70,
     lineWidth: 4,
     textSize: 20,
@@ -23,7 +23,7 @@ export const breadthFirstSearch = async () => {
   queue.enqueue(graph.head, 500);
   await timeout(500);
 
-  const resultQueue = new Queue<Node>(document.body, [], style);
+  const resultQueue = new Queue<Node>(container, [], style);
   while (queue.length !== 0) {
     const node = queue.getNextToDequeue();
 

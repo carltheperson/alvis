@@ -39,12 +39,12 @@ const GRAPH_STYLE = {
   lineWidth: 3.5,
 };
 
-export const dijkstrasAlgorithm = async () => {
+export const dijkstrasAlgorithm = async (container_: HTMLDivElement) => {
   const container = document.createElement("div");
   container.style.display = "flex";
   container.style.alignItems = "baseline";
   container.style.gap = "20px";
-  document.body.appendChild(container);
+  container_.appendChild(container);
 
   const graph = new Graph(container, GRAPH, GRAPH_STYLE);
 
@@ -59,19 +59,15 @@ export const dijkstrasAlgorithm = async () => {
   const grid = new TextGrid(container2, values);
   grid.changeColorForRow(0, "lightgrey");
 
-  addSmallTitle("Open");
+  addSmallTitle("Open", container_);
   const openQueue = new Queue<{ text: string }>(
-    document.body,
+    container_,
     GRAPH_NODES.filter((el) => el.text != GRAPH.tail.text),
     QUEUE_STYLE
   );
 
-  addSmallTitle("Closed");
-  const closedQueue = new Queue<{ text: string }>(
-    document.body,
-    [],
-    QUEUE_STYLE
-  );
+  addSmallTitle("Closed", container_);
+  const closedQueue = new Queue<{ text: string }>(container_, [], QUEUE_STYLE);
 
   const textField = new TextField(container2, grid.canvasWidth);
 

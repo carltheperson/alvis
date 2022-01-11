@@ -6,9 +6,9 @@ O(1)S
 o(n^2)T
 */
 
-export const bubbleSort = async () => {
+export const bubbleSort = async (container: HTMLDivElement) => {
   const array = getRandomUnsortedArray(20);
-  const alvis = new Chart(document.body, "Bubble sort", array, {
+  const alvis = new Chart(container, "Bubble sort", array, {
     barWidth: 30,
   });
 

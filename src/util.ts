@@ -80,8 +80,8 @@ export const addTitle = (text: string) => {
   document.body.appendChild(title);
 };
 
-export const addSmallTitle = (text: string) => {
+export const addSmallTitle = (text: string, div: HTMLDivElement) => {
   const title = document.createElement("h2");
   title.innerText = text;
-  document.body.appendChild(title);
+  div.appendChild(title);
 };

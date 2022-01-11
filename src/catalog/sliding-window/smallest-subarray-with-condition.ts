@@ -1,20 +1,23 @@
 import { Array1D } from "../../array/array1d";
 import { TextField } from "../../text-field/text-field";
-import { addTitle, getRandomUnsortedArray } from "../../util";
+import { getRandomUnsortedArray } from "../../util";
 
 const TARGET_SUM = 12;
 
-export const smallestSubArrayWithCondition = async () => {
-  addTitle("Smallest subarray length with sum greater than " + TARGET_SUM);
+export const smallestSubArrayWithCondition = async (
+  container: HTMLDivElement
+) => {
+  new TextField(container, 400).text =
+    "Smallest subarray length with sum greater than " + TARGET_SUM;
   const array = getRandomUnsortedArray(10);
   array[7] = TARGET_SUM;
-  const alvis = new Array1D(document.body, array);
+  const alvis = new Array1D(container, array);
 
   let minLength = Infinity;
-  const currentSumTextField = new TextField(document.body, 150);
-  const minLengthTextField = new TextField(document.body, 210);
+  const currentSumTextField = new TextField(container, 150);
+  const minLengthTextField = new TextField(container, 210);
   let currentSum = 0;
-  const conditionTextField = new TextField(document.body, 300);
+  const conditionTextField = new TextField(container, 300);
 
   const markWindow = async (start: number, end: number, duration = 2000) => {
     if (currentSum >= TARGET_SUM) {

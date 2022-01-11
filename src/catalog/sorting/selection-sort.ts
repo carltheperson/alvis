@@ -1,9 +1,9 @@
 import { Chart } from "../../chart/chart";
 import { getRandomUnsortedArray } from "../../util";
 
-export const selectionSort = async () => {
+export const selectionSort = async (container: HTMLDivElement) => {
   const array = getRandomUnsortedArray(20);
-  const alvis = new Chart(document.body, "Selection sort", array, {
+  const alvis = new Chart(container, "Selection sort", array, {
     barWidth: 30,
   });
   let currentIndex = 0;

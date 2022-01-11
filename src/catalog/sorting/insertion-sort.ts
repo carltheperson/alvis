@@ -6,9 +6,9 @@ o(n^2)T
 import { Chart } from "../../chart/chart";
 import { getRandomUnsortedArray } from "../../util";
 
-export const insertionSort = async () => {
+export const insertionSort = async (container: HTMLDivElement) => {
   const array = getRandomUnsortedArray(20);
-  const alvis = new Chart(document.body, "Insertion sort", array, {
+  const alvis = new Chart(container, "Insertion sort", array, {
     barWidth: 30,
   });
 
