@@ -3,9 +3,6 @@ import { Graph } from "../../graph/graph";
 import { Queue } from "../../queue/queue";
 import { Node } from "../../graph/node";
 import { timeout } from "../../util";
-import { BFSExample } from "../../example-data/bfs-example";
-import { grokkingAlgoBFSExample } from "../../example-data/grokking-graph";
-import { videoGraphExample } from "../../example-data/video-short-example";
 
 export const depthFirstSearch = async (container: HTMLDivElement) => {
   const graph = new Graph(container, letterGraphExample, {
@@ -13,7 +10,7 @@ export const depthFirstSearch = async (container: HTMLDivElement) => {
     padding: 70,
     lineWidth: 4,
   });
-  const resultQueue = new Queue<Node>(container, [], {
+  const visitedQueue = new Queue<Node>(container, [], {
     cellMaxAmount: 10,
     textSize: 20,
   });
@@ -22,18 +19,24 @@ export const depthFirstSearch = async (container: HTMLDivElement) => {
 
   const traverse = async (node: Node) => {
     node.color = "dodgerBlue";
-    await resultQueue.enqueue(node, 750, { color: "lightGreen" });
+    await visitedQueue.enqueue(node, 750, { color: "lightGreen" });
     visited[node.text] = true;
     node.color = "lightGreen";
     for (const edge of node.edges) {
       if (visited[edge.node.text]) {
-        await timeout(250);
         edge.color = "grey";
+        await timeout(1000);
         continue;
       }
       await timeout(500);
       edge.color = "green";
+
       await traverse(edge.node);
+
+      await timeout(400);
+      node.color = "LightSeaGreen";
+      await timeout(700);
+      node.color = "lightGreen";
     }
   };
 
