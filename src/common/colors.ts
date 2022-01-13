@@ -7,8 +7,8 @@ interface Entity {
 export class Colors extends Alvis {
   private allEntities: Entity[] = [];
 
-  constructor(element: HTMLElement, title?: string) {
-    super(element, title);
+  constructor(element: HTMLElement) {
+    super(element);
   }
 
   set entities(entities: Entity[]) {

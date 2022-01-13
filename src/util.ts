@@ -85,3 +85,35 @@ export const addSmallTitle = (text: string, div: HTMLDivElement) => {
   title.innerText = text;
   div.appendChild(title);
 };
+
+export const addWhitespace = (div: HTMLDivElement, height: number) => {
+  const newDiv = document.createElement("div");
+  newDiv.style.height = height + "px";
+  div.appendChild(newDiv);
+};
+
+/** Used to give an algorithm two views */
+export const setUpSwitchButton = (
+  container: HTMLDivElement,
+  secondContainer: HTMLDivElement,
+  switchHandler: (on: boolean) => void
+) => {
+  const button = document.createElement("button");
+  button.innerText = "Switch";
+  button.style.opacity = "0.5";
+  container.appendChild(button);
+
+  container.appendChild(secondContainer);
+
+  let on = false;
+
+  const switchWrapper = () => {
+    secondContainer.innerHTML = "";
+    switchHandler(on);
+    on = !on;
+  };
+
+  button.addEventListener("click", switchWrapper);
+
+  switchWrapper();
+};

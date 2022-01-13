@@ -1,6 +1,6 @@
 import { calculateXOffset, calculateYOffset, timeout } from "../util";
 import { Movements } from "../common/movements";
-import { Bar } from "./bar";
+import { Bar, BarStyle } from "./bar";
 import { Colors } from "../common/colors";
 
 enum Default {
@@ -16,8 +16,8 @@ interface Style_ {
 }
 type Style = Partial<Style_>;
 
-type AllStyles = Style;
-type AllStylesRequired = Required<Style>;
+type AllStyles = Style & BarStyle;
+type AllStylesRequired = Required<Style> & AllStyles;
 
 export class Chart extends Colors {
   private bars: Bar[] = [];
@@ -26,13 +26,8 @@ export class Chart extends Colors {
   private xOffset = 0;
   private yOffset = 0;
 
-  constructor(
-    element: HTMLElement,
-    title: string,
-    values: number[],
-    style: AllStyles = {}
-  ) {
-    super(element, title);
+  constructor(element: HTMLElement, values: number[], style: AllStyles = {}) {
+    super(element);
     this.style = {
       ...style,
       barWidth: style.barWidth ?? Default.BAR_WIDTH,
@@ -63,7 +58,8 @@ export class Chart extends Colors {
         this.xOffset + i * this.style.barWidth,
         this.yOffset + maxHeight - height / 2,
         this.style.barWidth,
-        height
+        height,
+        this.style
       );
     });
   }

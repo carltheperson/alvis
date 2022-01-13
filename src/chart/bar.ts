@@ -1,12 +1,31 @@
 import * as Two from "twojs-ts";
 
+enum Default {
+  STROKE = 1,
+}
+
+export interface BarStyle {
+  stroke?: number;
+}
+
 export class Bar {
   private two: Two | null = null;
   private rectangle: Two.Rectangl;
+  constructor(
+    two: Two,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    style: BarStyle = {}
+  ) {
+    const newStyle = {
+      stroke: style.stroke ?? Default.STROKE,
+    };
 
-  constructor(two: Two, x: number, y: number, width: number, height: number) {
     this.two = two;
     this.rectangle = two.makeRectangle(x, y, width, height);
+    this.rectangle.linewidth = newStyle.stroke;
   }
 
   set y(y: number) {
