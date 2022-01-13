@@ -15,6 +15,7 @@ const runAlgorithm = async (
 ) => {
   let j = 0;
   for (let i = 0; i < array.length; i++) {
+    alvis.changeColorsInRange(0, i, "lightgrey", 0);
     await alvis.changeColor(i, "tomato", 250 * delta);
     j = i;
     while (j > 0 && array[j] < array[j - 1]) {
@@ -23,9 +24,8 @@ const runAlgorithm = async (
     }
     await timeout(50 * delta);
     await alvis.changeColor(j, "lightgreen", 800 * delta);
-    await alvis.changeColor(j, "white", 250 * delta);
   }
-  alvis.changeAllColors("lightgreen");
+  await alvis.changeAllColors("lightgreen", 500);
 };
 
 export const insertionSort = async (container: HTMLDivElement) => {

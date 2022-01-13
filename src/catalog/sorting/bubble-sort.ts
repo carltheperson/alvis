@@ -20,12 +20,13 @@ const runAlgorithm = async (
     swapAmount = 0;
 
     for (let i = 0; i <= end; i++) {
-      await alvis.changeColor(i, "lightgrey", 400 * delta);
+      await alvis.changeColor(i, "yellow", 400 * delta);
       if (array[i] > array[i + 1]) {
         await alvis.swapElements(i, i + 1, 1000 * delta);
-        alvis.changeColor(i, "lightgrey");
+
         swapAmount += 1;
       }
+      alvis.changeColor(i, "white");
     }
 
     end -= 1;

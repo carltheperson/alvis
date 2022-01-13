@@ -8,10 +8,10 @@ import { bubbleSort } from "./catalog/sorting/bubble-sort";
 import { insertionSort } from "./catalog/sorting/insertion-sort";
 import { selectionSort } from "./catalog/sorting/selection-sort";
 
-const SELECT_TITLE = "Select algorithm";
+const SELECT_TITLE = "-- Select algorithm --";
 
 const algorithms: Record<string, (c: HTMLDivElement) => any> = {
-  "Select algorithm": () => null,
+  [SELECT_TITLE]: () => null,
   "Bubble Sort": bubbleSort,
   "Intersection Sort": insertionSort,
   "Selection Sort": selectionSort,
