@@ -1,5 +1,4 @@
 import { Array1D } from "../../array/array1d";
-import { DEFAULT_ARRAY_STYLE } from "../../constants";
 import { TextField } from "../../text-field/text-field";
 import {
   addSmallTitle,
@@ -30,11 +29,11 @@ export const binarySearch = async (container: HTMLDivElement) => {
     const middle = Math.floor((left + right) / 2);
     await alvis.changeColor(middle, "dodgerBlue", 1000);
     if (array[middle] < target) {
-      await alvis.changeColorsInRange(left, middle - 1, "OrangeRed", 1000);
+      await alvis.changeColorsInRange(left, middle - 1, "tomato", 1000);
       left = middle + 1;
       text.text = `${array[middle]} < ${target}`;
     } else if (array[middle] > target) {
-      await alvis.changeColorsInRange(middle + 1, right, "OrangeRed", 1000);
+      await alvis.changeColorsInRange(middle + 1, right, "tomato", 1000);
       right = middle - 1;
       text.text = `${array[middle]} > ${target}`;
     } else {
@@ -44,6 +43,5 @@ export const binarySearch = async (container: HTMLDivElement) => {
       break;
     }
     alvis.changeAllColors("white", 0);
-    // alvis.changeColor(middle, "dodgerBlue", 0);
   } while (left <= right);
 };
