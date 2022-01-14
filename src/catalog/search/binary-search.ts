@@ -29,13 +29,13 @@ export const binarySearch = async (container: HTMLDivElement) => {
     const middle = Math.floor((left + right) / 2);
     await alvis.changeColor(middle, "dodgerBlue", 1000);
     if (array[middle] < target) {
+      text.text = `${array[middle]} < ${target}`;
       await alvis.changeColorsInRange(left, middle - 1, "tomato", 1000);
       left = middle + 1;
-      text.text = `${array[middle]} < ${target}`;
     } else if (array[middle] > target) {
+      text.text = `${array[middle]} > ${target}`;
       await alvis.changeColorsInRange(middle + 1, right, "tomato", 1000);
       right = middle - 1;
-      text.text = `${array[middle]} > ${target}`;
     } else {
       text.text = `${array[middle]} == ${target}`;
       text.color = "green";
