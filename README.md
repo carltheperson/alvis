@@ -1,12 +1,9 @@
 <h1 align="center">Alvis 🌟</h1>
+<p align="center">Algorithms Visualized</p>
 
-<p align="center">JavaScript algorithm visualizer </p>
+<p align="center"><b><a href="https://alvis-algorithms.web.app/">Play with the live demo</a></b></p>
 
 ![](./screenshot.png)
-
-# Credits
-
-- [typescript-on-browser-starter](https://github.com/nwtgck/typescript-on-browser-starter) For many of the boilerplate config files
 
 # License
 
