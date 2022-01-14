@@ -21,8 +21,8 @@ const runAlgorithm = async (
       }
       alvis.changeColorsInRange(currentIndex, smallestIndex - 1, "white");
       alvis.changeColorsInRange(smallestIndex + 1, array.length - 1, "white");
-      await alvis.changeColor(i, "lightgrey");
-      await alvis.changeColor(smallestIndex, "yellow", 300 * delta);
+      await alvis.changeColor(i, "yellow", 0);
+      await alvis.changeColor(smallestIndex, "dodgerBlue", 700 * delta);
     }
     await alvis.swapElements(currentIndex, smallestIndex, 1000 * delta);
     alvis.changeColorsInRange(0, currentIndex, "lightgreen");

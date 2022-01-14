@@ -1,14 +1,15 @@
 import { Array1D } from "../../array/array1d";
 import { TextField } from "../../text-field/text-field";
-import { getRandomUnsortedArray } from "../../util";
+import { addWhitespace, getRandomUnsortedArray } from "../../util";
 
 const TARGET_SUM = 12;
 
 export const smallestSubArrayWithCondition = async (
   container: HTMLDivElement
 ) => {
-  new TextField(container, 400).text =
-    "Smallest subarray length with sum greater than " + TARGET_SUM;
+  addWhitespace(container, 100);
+  new TextField(container, 100).text = "sum >= 12";
+  addWhitespace(container, 50);
   const array = getRandomUnsortedArray(10);
   array[7] = TARGET_SUM;
   const alvis = new Array1D(container, array);

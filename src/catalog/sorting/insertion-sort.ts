@@ -15,7 +15,7 @@ const runAlgorithm = async (
 ) => {
   let j = 0;
   for (let i = 0; i < array.length; i++) {
-    alvis.changeColorsInRange(0, i, "lightgrey", 0);
+    alvis.changeColorsInRange(0, i, "lightgreen", 0);
     await alvis.changeColor(i, "tomato", 250 * delta);
     j = i;
     while (j > 0 && array[j] < array[j - 1]) {

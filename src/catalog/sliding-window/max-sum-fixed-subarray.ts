@@ -1,12 +1,12 @@
 import { Array1D } from "../../array/array1d";
 import { TextField } from "../../text-field/text-field";
-import { getRandomUnsortedArray, timeout } from "../../util";
+import { addWhitespace, getRandomUnsortedArray, timeout } from "../../util";
 
 const SUBARRAY_LENGTH = 3;
 
 export const maxSumFixedSubarray = async (container: HTMLDivElement) => {
-  new TextField(container, 400).text =
-    "Max sum of subarray with fixed length " + SUBARRAY_LENGTH;
+  addWhitespace(container, 150);
+
   const array = getRandomUnsortedArray(10);
   const alvis = new Array1D(container, array);
 
@@ -20,7 +20,7 @@ export const maxSumFixedSubarray = async (container: HTMLDivElement) => {
   };
   const setMaxValue = (value: number) => {
     maxValue = value;
-    maxValueTextField.text = "Max value: " + value;
+    maxValueTextField.text = "Max sum: " + value;
   };
   setCurrentRunningSum(currentRunningSum);
   setMaxValue(maxValue);
