@@ -117,3 +117,11 @@ export const setUpSwitchButton = (
 
   switchWrapper();
 };
+
+export const getAlgorithmKeyFromUrl = (): string | null => {
+  return location.search.split("a=")[1] ?? null;
+};
+
+export const setAlgorithmKeyInUrl = (key: string) => {
+  window.history.replaceState(null, null as any, "?a=" + key);
+};
