@@ -44,6 +44,7 @@ const current = getAlgorithmKeyFromUrl() ?? localStorage.getItem("select");
 if (current) {
   select.selectedIndex = Object.keys(algorithms).indexOf(current);
   algorithms[current][1](container);
+  setAlgorithmKeyInUrl(current);
 }
 
 select.addEventListener("change", (event) => {
