@@ -126,6 +126,8 @@ YouTube Video:
 
 ## Max Sum Fixed Subarray (Sliding Window Technique)
 
+Complexity: _O(n)T_ _O(1)S_
+
 [Live demo](https://alvis-algorithms.web.app/?a=mxfxs)
 
 [Animation source](src/catalog/sliding-window/max-sum-fixed-subarray.ts)
