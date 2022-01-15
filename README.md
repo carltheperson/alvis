@@ -1,5 +1,6 @@
 <h1 align="center">Alvis 🌟</h1>
-<p align="center">My Tool for Visualizing Algorithms</p>
+<p align="center">My tool for visualizing algorithms</p>
+<p align="center">I use it to make algorithm <a href="https://www.youtube.com/playlist?list=PLnZHgAO8ocBv6XRqZkqQjrsIJijn82UUC">YouTube videos</a></p>
 
 <p align="center">
 	<img src="screenshot.png" alt="screenshot">
